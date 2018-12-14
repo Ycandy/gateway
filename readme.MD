@@ -17,10 +17,14 @@ start 生产环境
 ### 配置说明
 #### 按需加载配置文件
 项目会按照process.env.DEPLOY_ENV的参数加载对应的`config/config.${process.env.DEPLOY_ENV}.js`文件
+
 config/config.${process.env.DEPLOY_ENV}.js文件中配置的route对象可以修改当前项目的端口号(port)和二级目录(prefix)
+
 process.env.DEPLOY_ENV的默认值为default，也就是默认加载config/config.default.js文件
+
 --deploy可以修改process.env.DEPLOY_ENV的值
 
 #### 打包优化
 DllPlugin，对应的配置文件为build/webpack.dll.config.js
+
 happypack,多线程打包
