@@ -72,11 +72,9 @@ const devMiddleware = require('webpack-dev-middleware')(serverCompiler, {
 devMiddleware.waitUntilValid(function () {
   console.log(`> Listening at localhost:${port}${prefix} \n`)
 })
-app.use(devMiddleware)
 const hotMiddleware = require('webpack-hot-middleware')(serverCompiler, {
   log: () => {}
 })
-app.use(hotMiddleware)
 serverCompiler.plugin('compilation', function (compilation) {
   compilation.plugin('html-webpack-plugin-after-emit', function (data, cb) {
     hotMiddleware.publish({ action: 'reload' })
@@ -84,8 +82,13 @@ serverCompiler.plugin('compilation', function (compilation) {
   })
 })
 
-// handle fallback for HTML5 history API
+// vue-router的history模式，会去掉url中的#，使得url会回到普通网页的状态
+// 但是当直接访问某个非首页路由时，会按照普通访问url的方式去访问对应的文件夹
+// 因此需要使用connect-history-api-fallback去完成对单页应用的支持
+// 需要注意的是h5的支持需要在webpack-dev-middleware之前，否则不会起作用
 app.use(`${prefix}`, require('connect-history-api-fallback')())
+app.use(devMiddleware)
+app.use(hotMiddleware)
 
 // 访问静态资源
 app.use(`${prefix}/static`, express.static(path.join(__dirname, '../static')))

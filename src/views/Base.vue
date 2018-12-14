@@ -1,5 +1,5 @@
 <template lang="pug">
-.index
+.base
   span index
 </template>
 
@@ -10,7 +10,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.index
+.base
   width 100%
   height 100%
 </style>
