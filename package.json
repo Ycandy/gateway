@@ -6,8 +6,8 @@
     "dev": "cross-env node build/webpack.dev.js",
     "build": "cross-env node build/webpack.build.js",
     "build:dll": "cross-env node build/webpack.dll.config.js",
-    "start": "cross-env node build/server.js",
-    "analysis": "cross-env ANALYSIS=true PORT=8080 node build/webpack.build.js"
+    "analysis": "cross-env ANALYSIS=true PORT=8080 node build/webpack.build.js",
+    "start": "cross-env node build/server.js"
   },
   "repository": {
     "type": "git",

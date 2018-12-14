@@ -59,16 +59,18 @@ const webpackConfig = merge(baseConfig, {
       root: path.join(__dirname, '../'),
       verbose: true
     }),
-    new CopyWebpackPlugin([{
-      from: path.resolve(__dirname, '../dll/js'),
-      to: path.resolve(__dirname, '../dist'),
-      ignore: ['.json']
-    }]),
+    // DllReferencePlugin
     ...Object.keys(bundlePkg).map(name => {
       return new webpack.DllReferencePlugin({
         manifest: require(`../dll/${name}-manifest.json`) 
       })
     }),
+    // 将DllPlugin生成的文件移入dist目录
+    new CopyWebpackPlugin([{
+      from: path.resolve(__dirname, '../dll/js'),
+      to: path.resolve(__dirname, '../dist'),
+      ignore: ['.json']
+    }]),
     // 多线程打包
     new HappyPack({
       id: 'happyBabel',
@@ -86,6 +88,7 @@ const webpackConfig = merge(baseConfig, {
       inject: true,
       title: config.title,
       favicon: path.resolve(__dirname, '../public/favicon.png'),
+      // 模板中将dllPlugin生成的文件引入页面中
       bundles: Object.values(bundlePkg).map(item => {
         return `${config.route.prefix}/${item.js}`
       }),
