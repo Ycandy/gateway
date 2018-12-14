@@ -89,9 +89,7 @@ const webpackConfig = merge(baseConfig, {
       title: config.title,
       favicon: path.resolve(__dirname, '../public/favicon.png'),
       // 模板中将dllPlugin生成的文件引入页面中
-      bundles: Object.values(bundlePkg).map(item => {
-        return `${config.route.prefix}/${item.js}`
-      }),
+      bundles: Object.values(bundlePkg).map(item => `${config.route.prefix}/${item.js}`),
       // 集成的html-minifier的配置项
       minify: {
         // 去除注释内容

@@ -36,6 +36,8 @@ const webpackConfig = merge(baseConfig, {
       inject: true,
       // html文档的标题
       title: config.title,
+      // html base
+      base: `${prefix}/`,
       // favicon文件
       favicon: path.resolve(__dirname, '../public/favicon.png'),
       // 按照依赖顺序引入chunks
