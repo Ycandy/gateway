@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 
 // 处理环境变量
-const enviroment = require('./environment')
+const enviroment = require('../build/environment')
 enviroment(false)
 
 // 获取自定义配置信息
@@ -12,7 +12,7 @@ const webpack = require('webpack')
 const merge = require('webpack-merge')
 const path = require('path')
 const os = require('os')
-const baseConfig = require('./webpack.base.conf')
+const baseConfig = require('../build/webpack.config.base')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HappyPack = require('happypack')

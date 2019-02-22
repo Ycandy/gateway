@@ -1,5 +1,5 @@
 // 处理环境变量
-const enviroment = require('./environment')
+const enviroment = require('../build/environment')
 enviroment(false)
 
 const path = require('path')

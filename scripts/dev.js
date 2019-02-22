@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 
 // 处理环境变量
-const enviroment = require('./environment')
+const enviroment = require('../build/environment')
 enviroment()
 
 // 获取自定义配置信息
@@ -12,7 +12,7 @@ const { port, prefix } = config.route
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 const path = require('path')
-const baseConfig = require('./webpack.base.conf')
+const baseConfig = require('../build/webpack.config.base')
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const webpackConfig = merge(baseConfig, {

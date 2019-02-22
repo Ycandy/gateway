@@ -6,7 +6,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin')
 const AssetsPlugin = require('assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
  
-const dllWebpackConfig = {
+module.exports = {
   mode: 'production',
   entry: {
     vue: ['vue', 'vuex', 'vue-router', 'vuex-router-sync']
@@ -38,14 +38,3 @@ const dllWebpackConfig = {
     })
   ]
 }
-
-webpack(dllWebpackConfig, function (err, stats) {
-  if (err) throw err
-  process.stdout.write(stats.toString({
-    colors: true,
-    modules: false,
-    children: false,
-    chunks: false,
-    chunkModules: false
-  }) + '\n')
-})
