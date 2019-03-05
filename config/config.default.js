@@ -1,6 +1,6 @@
 module.exports = {
-  key: 'vuepress',
-  title: 'Express NodeJS application server boilerplate with VueJS',
+  key: 'gateway',
+  title: 'gateway-Gapper业务集成',
   route: {
     prefix: '/gateway',
     port: 8001,

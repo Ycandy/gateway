@@ -1,7 +1,7 @@
 {
-  "name": "vuepress",
+  "name": "gateway",
   "version": "1.0.0",
-  "description": "Express NodeJS application server boilerplate with VueJS",
+  "description": "",
   "scripts": {
     "dev": "cross-env node scripts/dev.js",
     "build": "cross-env node scripts/build.js",
