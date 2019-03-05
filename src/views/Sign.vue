@@ -1,0 +1,37 @@
+<template lang="pug">
+.index
+  .title
+    span 注册
+  .form-board
+    .first-level
+      span 账户信息
+    .second-level
+      .input-title 用户名
+      input
+</template>
+
+<script>
+
+export default {
+}
+</script>
+
+<style lang="stylus" scoped>
+.index
+  width 100%
+  height 100%
+  display flex
+  flex-direction column
+  justify-content flex-start
+  align-items center
+.title
+  width 100%
+  height 48px
+  line-height 48px
+  text-align center
+  font-size 16px
+.form-board
+  width 50%
+  margin-bottom 20px
+  background-color #fff
+</style>

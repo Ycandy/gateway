@@ -17,7 +17,11 @@ export function createRouter (store) {
     }, {
       name: 'login',
       path: '/login',
-      component: r => require.ensure([], () => r(require('src/views/Base.vue')), 'login')
+      component: r => require.ensure([], () => r(require('src/views/Sign.vue')), 'login')
+    }, {
+      name: 'sign',
+      path: '/sign',
+      component: r => require.ensure([], () => r(require('src/views/Sign.vue')), 'sign')
     }]
   })
   router.beforeEach((to, from, next) => {

@@ -8,7 +8,10 @@ export default {
 }
 </script>
 
-<style lang="stylus" scope>
-#app
-  width 100%
+<style lang="stylus">
+#app {
+  width: 100%;
+  height: 100%;
+}
+@import '../public/style/index.styl'
 </style>

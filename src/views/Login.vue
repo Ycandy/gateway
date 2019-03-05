@@ -1,6 +1,6 @@
 <template lang="pug">
 .index
-  span index
+  span 登录
 </template>
 
 <script>
