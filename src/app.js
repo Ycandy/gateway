@@ -3,7 +3,7 @@ import App from './App.vue'
 import { createStore } from './store'
 import { createRouter } from './router'
 import { sync } from 'vuex-router-sync'
-import { Input, Button, Select } from 'element-ui'
+import { Input, Button, Select, Option, RadioGroup, Radio } from 'element-ui'
 
 const store = createStore()
 
@@ -26,6 +26,9 @@ Vue.prototype.$ELEMENT = { size: 'mini' }
 Vue.use(Input)
 Vue.use(Button)
 Vue.use(Select)
+Vue.use(Option)
+Vue.use(RadioGroup)
+Vue.use(Radio)
 
 /* eslint-disable no-new */
 new Vue({
