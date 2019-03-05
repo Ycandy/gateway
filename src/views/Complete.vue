@@ -6,7 +6,7 @@
       span 你好!&nbsp;&nbsp;您是首次登录,&nbsp;&nbsp;请首先补全信息
       i.el-icon-close(style='cursor: pointer;margin-left: 20px;' @click='closeMessage')
     .form
-      .fieldset 账号信息
+      .fieldset 基本信息
       .input-group
         .name.required 用户名
         el-input.fill-fill(v-model='username')
@@ -19,7 +19,7 @@
         .name.required 确认密码
         el-input.fill-fill(v-model='confirmPassword')
         .tips
-      .fieldset 个人信息
+      .fieldset 自定义字段
       .input-group
         .name.required 姓名
         el-input.fill-fill(v-model='name')
@@ -29,12 +29,6 @@
         el-input.fill-fill(v-model='phone')
         .tips
       .input-group
-        .name 性别
-        .fill-fill
-          el-radio(v-model="sex" label="man") 男
-          el-radio(v-model="sex" label="woman") 女
-        .tips
-      .input-group
         .name.required 人员类型
         el-select.fill-fill(v-model='type')
         .tips
@@ -42,7 +36,6 @@
         .name 学工号
         el-input.fill-fill(v-model='idCard')
         .tips
-      .fieldset 课题组信息
       .input-group
         .name.required 组织机构
         el-select.fill-fill(v-model='group')
