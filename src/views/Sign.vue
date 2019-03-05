@@ -28,6 +28,7 @@
       el-radio-group(v-model='radio')
         el-radio(label='male') 男
         el-radio(label='female') 女
+    el-button(type='primary') 提交
 </template>
 
 <script>
@@ -51,8 +52,6 @@ export default {
   flex-direction column
   justify-content flex-start
   align-items center
-.form-board
-  width 50%
-  margin-bottom 20px
-  background-color #fff
+.el-button
+  margin-top 20px
 </style>
