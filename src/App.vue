@@ -11,6 +11,8 @@ export default {
 <style lang="stylus">
 @import '../public/style/index.styl'
 
+body
+  overflow auto
 #app
   width 100%
   height 100%

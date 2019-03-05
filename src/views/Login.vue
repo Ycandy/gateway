@@ -71,7 +71,6 @@ export default {
     flex-direction column
     margin 0 auto
     width 600px
-    height calc(100% - 30px)
     .logo
       margin-top 100px
       color #5db8f1
