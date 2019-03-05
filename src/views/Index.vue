@@ -1,6 +1,8 @@
 <template lang="pug">
 .index
   span index
+  .message
+    span 你好!&nbsp;&nbsp;您是首次登录,&nbsp;&nbsp;请首先补全信息
 </template>
 
 <script>

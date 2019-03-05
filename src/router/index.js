@@ -23,6 +23,10 @@ export function createRouter (store) {
       path: '/complete',
       component: r => require.ensure([], () => r(require('src/views/Complete.vue')), 'complete')
     }, {
+      name: 'info',
+      path: '/info',
+      component: r => require.ensure([], () => r(require('src/views/Info.vue')), 'info')
+    }, {
       name: 'sign',
       path: '/sign',
       component: r => require.ensure([], () => r(require('src/views/Sign.vue')), 'sign')
