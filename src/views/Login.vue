@@ -1,38 +1,40 @@
 <template lang="pug">
 .login
-  el-button.sign(type="primary") 注册
   .board
-    .logo
-      span GAPPER
+    img.logo(width='175' height='38' src='public/image/gapper.png')
     .types
-      .account.type
-        .circle
+      .account.type(:class='{ "active": active === "account" }'
+        @click='active = "account"')
+        .icon-png
         span 账号密码
-      .id-card.type
-        .circle
+      .card.type(:class='{ "active": active === "card" }'
+        @click='active = "card"')
+        .icon-png
         span 一卡通
-      .wechat.type
-        .circle
-        span 微信
-      .weibo.type
-        .circle
-        span 微博
-      .qq.type
-        .circle
-        span QQ
-    .form
-      .title 账号密码登录
-      el-input.input(
-        v-model='username'
-        placeholder="用户名"
-      )
-        i.icon.el-icon-service(slot="prepend")
-      el-input.input(
-        v-model='password'
-        placeholder="密码"
-      )
-        i.icon.el-icon-service(slot="prepend")
+      //- .wechat.type(:class='{ "active": active === "wechat" }')
+      //-   .icon-png
+      //-   span 微信
+      //- .weibo.type(:class='{ "active": active === "weibo" }')
+      //-   .icon-png
+      //-   span 微博
+      //- .qq.type(:class='{ "active": active === "qq" }')
+      //-   .icon-png
+      //-   span QQ
+    .form(v-if='active === "account"')
+      .input-group
+        el-input.input(
+          v-model='form.username'
+          placeholder="用户名")
+          img(slot="prepend" width='18' height='18' src='public/image/user.png')
+      .input-group
+        el-input.input(
+          v-model='form.password'
+          placeholder="密码")
+          img(slot="prepend" width='18' height='18' src='public/image/password.png')
+        .sign 注册
+        .reset-password 忘记密码
       el-button.login-button(type="primary") 登&nbsp;&nbsp;录
+      //- .sign 注册&nbsp;>>>
   .idea Research Gets Easier
 </template>
 
@@ -41,8 +43,11 @@
 export default {
   data () {
     return {
-      username: '',
-      password: ''
+      active: 'account',
+      form: {
+        username: '',
+        password: ''
+      }
     }
   }
 }
@@ -50,102 +55,140 @@ export default {
 
 <style lang="stylus" scoped>
 .login
-  display flex
-  flex-direction column
   position relative
   width 100%
   height 100%
-  .sign
-    position absolute
-    top 20px
-    right 40px
-    padding 0 20px
-    width 80px
-    height 26px
-    line-height 26px
-    font-size 12px
-    border-radius 12px
+  text-align center
   .board
-    flex 1
-    display flex
-    flex-direction column
     margin 0 auto
     width 600px
     .logo
-      margin-top 100px
-      color #5db8f1
-      font-size 28px
-      text-align center
+      margin 102px auto 38px
     .types
       box-sizing border-box
       padding 0 20px
       display flex
       justify-content space-around
       align-items center
-      margin-top 20px
       width 100%
       height 150px
       background #fff
       .type
-        width 80px
-        height 100px
+        cursor pointer
+        width 68px
+        height 90px
         text-align center
-        font-size 12px
-        color #aaa
-        .circle
-          margin-bottom 8px
-          width 80px
-          height 80px
-          border-radius 40px
-      .account .circle
-        border 1px solid #5db8f1
-      .id-card .circle
-        border 1px solid #5db8f1
-      .wechat .circle
-        border 1px solid #5db8f1
-      .weibo .circle
-        border 1px solid #5db8f1
-      .qq .circle
-        border 1px solid #5db8f1
+        font-size 14px
+        color #999999
+        .icon-png
+          margin-bottom 12px
+          width 68px
+          height 68px
+      .account
+        .icon-png
+          background-image url('../../public/image/account.png')
+          background-size contain
+        &.active, &:hover
+          color #5DB8F1
+          .icon-png
+            background-image url('../../public/image/account-active.png')
+      .card
+        .icon-png
+          background-image url('../../public/image/card.png')
+          background-size contain
+        &.active, &:hover
+          color #F8D280
+          .icon-png
+            background-image url('../../public/image/card-active.png')
+      .wechat
+        .icon-png
+          background-image url('../../public/image/weixin.png')
+          background-size contain
+        &.active, &:hover
+          color #8ED2A9
+          .icon-png
+            background-image url('../../public/image/weixin-active.png')
+      .weibo
+        .icon-png
+          background-image url('../../public/image/weibo.png')
+          background-size contain
+        &.active, &:hover
+          color #F4C58F
+          .icon-png
+            background-image url('../../public/image/weibo-active.png')
+      .qq
+        .icon-png
+          background-image url('../../public/image/qq.png')
+          background-size contain
+        &.active, &:hover
+          color #E67D6D
+          .icon-png
+            background-image url('../../public/image/qq-active.png')
     .form
+      position relative
       box-sizing border-box
-      padding 30px 150px
-      margin-top 20px
+      margin-top 12px
+      padding 35px 156px 0
       width 100%
-      height 300px
+      height 292px
       background #fff
       text-align center
-      .title
-        color #5db8f1
-      .input.el-input
-        padding-right 10px
-        margin-top 25px
-        color #ddd
-        & >>> .el-input-group__prepend
-          padding 0
-          padding-right 10px
-          background-color transparent
-          border 0
+      .input-group
+        position relative
+        .input.el-input
+          margin-top 30px
+          padding-right 8px
           color #ddd
-          font-size 16px
-        & >>> input
-          border 0
-          border-bottom 1px solid #ddd
-          border-radius 0
+          & >>> .el-input-group__prepend
+            padding 0
+            padding-right 20px
+            background-color transparent
+            border 0
+            color #ddd
+            font-size 12px
+          & >>> input
+            border 0
+            border-bottom 1px solid #ddd
+            border-radius 0
+            font-size 12px
+            color #6D7F89
+        .sign
+          cursor pointer
+          position absolute
+          right 60px
+          bottom -24px
+          width 24px
+          height 16px
+          font-size 12px
+          color #6D7F89
+          &:hover
+            color #5DB8F1
+        .reset-password
+          cursor pointer
+          position absolute
+          right 0
+          bottom -24px
+          width 50px
+          height 16px
+          font-size 12px
+          color #6D7F89
+          &:hover
+            color #5DB8F1
       .login-button
         box-sizing border-box
-        margin-top 30px
-        padding 0 20px
-        width 280px
-        height 30px
-        line-height 30px
+        margin-top 46px
+        padding 0 15px
+        width 288px
+        height 38px
+        line-height 38px
         font-size 14px
-        border-radius 15px
+        border-radius 19px
   .idea
-    width 100%
-    height 80px
-    line-height 80px
-    font-weight bold
-    color #ccc
-    text-align center
+    margin-left -110px
+    position absolute
+    left 50%
+    bottom 35px
+    width 220px
+    font-size 16px
+    color #C6C6C6
 </style>

@@ -1,10 +1,10 @@
 <template lang="pug">
 .complete
+  .title 补全用户信息
   .board
-    .title 补全用户信息
-    .message
-      span 你好!&nbsp;&nbsp;您是首次登录,&nbsp;&nbsp;请首先补全信息&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      i.el-icon-close
+    .message(ref='message')
+      span 你好!&nbsp;&nbsp;您是首次登录,&nbsp;&nbsp;请首先补全信息
+      i.el-icon-close(style='cursor: pointer;margin-left: 20px;' @click='closeMessage')
     .form
       .fieldset 账号信息
       .input-group
@@ -18,32 +18,40 @@
       .input-group
         .name.required 确认密码
         el-input.fill-fill(v-model='confirmPassword')
+        .tips
       .fieldset 个人信息
       .input-group
         .name.required 姓名
         el-input.fill-fill(v-model='name')
+        .tips
       .input-group
         .name.required 联系电话
         el-input.fill-fill(v-model='phone')
+        .tips
       .input-group
         .name 性别
         .fill-fill
           el-radio(v-model="sex" label="man") 男
           el-radio(v-model="sex" label="woman") 女
+        .tips
       .input-group
         .name.required 人员类型
         el-select.fill-fill(v-model='type')
+        .tips
       .input-group
         .name 学工号
         el-input.fill-fill(v-model='idCard')
+        .tips
       .fieldset 课题组信息
       .input-group
         .name.required 组织机构
         el-select.fill-fill(v-model='group')
+        .tips
       .input-group
         .name.required 课题组
         el-select.fill-fill(v-model='type')
-      el-button(style='width: 100px' type='primary') 提交
+        .tips
+      el-button(style='margin: 35px 0 30px;width: 100px;' type='primary') 提交
 </template>
 
 <script>
@@ -61,48 +69,68 @@ export default {
       group: '',
       researchGroup: ''
     }
+  },
+  methods: {
+    closeMessage () {
+      this.closeMessageAnimate()
+    },
+    closeMessageAnimate () {
+      setTimeout(() => {
+        let $message = this.$refs.message
+        let height = $message.clientHeight
+        if (height > 0) {
+          height -= 1
+          $message.style.height = height + 'px'
+          this.closeMessageAnimate()
+        }
+      }, 10)
+    }
   }
 }
 </script>
 
 <style lang="stylus" scoped>
 .complete
+  display flex
+  flex-direction column
   width 100%
   height 100%
+  .title
+    padding 30px 0 20px
+    font-size 20px
+    color #333333
+    text-align center
   .board
+    flex 1
     display flex
     flex-direction column
     box-sizing border-box
     margin 0 auto
-    padding 30px 0
     width 600px
     height 100%
     text-align center
-    .title
-      font-size 16px
-      margin-bottom 20px
     .message
       width 100%
-      height 30px
-      line-height 30px
+      height 36px
+      line-height 36px
       font-size 12px
       color #CC6561
       background #FFF6DB
+      border-radius 3px
     .form
       box-sizing border-box
-      padding 24px 60px
+      padding 0 56px
       width 100%
       font-size 14px
       background #FFFFFF
       text-align center
       .fieldset
-        margin-bottom 20px
+        padding 22px 0 30px
         font-weight bold
         text-align left
       .input-group
         display flex
         flex-wrap wrap
-        height 60px
         text-align left
         .name
           width 100px
@@ -113,6 +141,7 @@ export default {
           flex 1
         .tips
           width 100%
+          padding 8px 0 14px
           font-size 12px
           color #CC6561
           padding-left 120px
