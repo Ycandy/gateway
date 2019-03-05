@@ -1,5 +1,5 @@
 <template lang="pug">
-.index
+.info
   .page-title
     span 注册
   .form-board

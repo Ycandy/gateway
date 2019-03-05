@@ -31,10 +31,9 @@
           v-model='form.password'
           placeholder="密码")
           img(slot="prepend" width='18' height='18' src='public/image/password.png')
-        .sign 注册
-        .reset-password 忘记密码
+        .sign(@click='goSign()') 注册
+        .reset-password(@click='goReset()') 忘记密码
       el-button.login-button(type="primary") 登&nbsp;&nbsp;录
-      //- .sign 注册&nbsp;>>>
   .idea Research Gets Easier
 </template>
 
@@ -48,6 +47,14 @@ export default {
         username: '',
         password: ''
       }
+    }
+  },
+  methods: {
+    goSign () {
+      this.$router.push({ name: 'sign' })
+    },
+    goReset () {
+      this.$router.push({ name: 'reset' })
     }
   }
 }
