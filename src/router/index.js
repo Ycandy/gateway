@@ -17,7 +17,7 @@ export function createRouter (store) {
     }, {
       name: 'login',
       path: '/login',
-      component: r => require.ensure([], () => r(require('src/views/Sign.vue')), 'login')
+      component: r => require.ensure([], () => r(require('src/views/Login.vue')), 'login')
     }, {
       name: 'sign',
       path: '/sign',
