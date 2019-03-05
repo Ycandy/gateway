@@ -7,7 +7,13 @@
       span 账户信息
     .second-level
       .input-title 用户名
-      input
+      el-input
+    .second-level
+      .input-title 密码
+      el-input
+    .second-level
+      .input-title 确认密码
+      el-input
 </template>
 
 <script>

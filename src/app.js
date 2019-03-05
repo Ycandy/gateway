@@ -3,9 +3,7 @@ import App from './App.vue'
 import { createStore } from './store'
 import { createRouter } from './router'
 import { sync } from 'vuex-router-sync'
-import { Button, Select } from 'element-ui'
-// import 'element-ui/lib/button/style.css'
-// import 'element-ui/lib/select/style.css'
+import { Input, Button, Select } from 'element-ui'
 
 const store = createStore()
 
@@ -24,6 +22,8 @@ router.beforeResolve((to, from, next) => {
   }).catch(next)
 })
 
+Vue.prototype.$ELEMENT = { size: 'mini' }
+Vue.use(Input)
 Vue.use(Button)
 Vue.use(Select)
 
