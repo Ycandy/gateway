@@ -15,9 +15,9 @@ export function createRouter (store) {
       path: '/',
       component: r => require.ensure([], () => r(require('src/views/Index.vue')), 'index')
     }, {
-      name: 'base',
-      path: '/',
-      component: r => require.ensure([], () => r(require('src/views/Base.vue')), 'base')
+      name: 'login',
+      path: '/login',
+      component: r => require.ensure([], () => r(require('src/views/Base.vue')), 'login')
     }]
   })
   router.beforeEach((to, from, next) => {

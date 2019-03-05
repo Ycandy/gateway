@@ -1,5 +1,4 @@
-# vuepress
-webpack4 + express + vue2 + pug + stylus
+# 登录-注册-补全信息
 
 ## 使用说明
 ### 安装
