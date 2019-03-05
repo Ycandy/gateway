@@ -3,7 +3,7 @@ import App from './App.vue'
 import { createStore } from './store'
 import { createRouter } from './router'
 import { sync } from 'vuex-router-sync'
-// import { Button, Select } from 'element-ui'
+import { Button, Select } from 'element-ui'
 // import 'element-ui/lib/button/style.css'
 // import 'element-ui/lib/select/style.css'
 
@@ -14,7 +14,7 @@ sync(store, router)
 
 router.beforeResolve((to, from, next) => {
   const matched = router.getMatchedComponents(to)
-  
+
   Promise.all(matched.map(c => {
     if (c.asyncData) {
       return c.asyncData({ store, route: to })
