@@ -5,64 +5,69 @@
   .message(ref='message')
     span 你好!&nbsp;&nbsp;您是首次登录,&nbsp;&nbsp;请首先补全信息
     i.el-icon-close(style='cursor: pointer;margin-left: 20px;' @click='closeMessage')
-  .form-board
+  form.form-board(
+    ref='form'
+    method='post'
+    :action='$config.app.complete')
     .first-level
       span 基本信息
-    .second-level
-      .input-title.required 用户名
-      el-input(v-model='username')
-    .tips 请使用真实邮箱注册,&nbsp;&nbsp;防止忘记密码无法找回
-    .second-level
-      .input-title.required 密码
-      el-input(v-model='password')
-    .tips 8-24个字符,&nbsp;&nbsp;必须包含数字和大小写字母
-    .second-level
-      .input-title.required 确认密码
-      el-input(v-model='confirmPassword')
-    .tips
-    .first-level 自定义字段
-    .second-level
-      .input-title.required 姓名
-      el-input(v-model='name')
-    .tips
-    .second-level
-      .input-title.required 联系电话
-      el-input(v-model='phone')
-    .tips
-    .second-level
-      .input-title.required 人员类型
-      el-select(v-model='type')
-    .tips
-    .second-level
-      .input-title 学工号
-      el-input(v-model='idCard')
-    .tips
-    .second-level
-      .input-title.required 组织机构
-      el-select(v-model='group')
-    .tips
-    .second-level
-      .input-title.required 课题组
-      el-select(v-model='type')
-    .tips
-    el-button(type='primary') 提交
+    template(v-for='field in basicFields')
+      .second-level
+        .input-title(:class='{ "required": field.required }') {{ field.name }}
+        el-input(v-if='field.type === 0'
+          v-model='field.value'
+          :name='field.name')
+        el-select(v-else-if='field.type === 1'
+          v-model='field.value'
+          :name='field.name')
+          el-option(v-for='option in field.select'
+            :key='option'
+            :label='option'
+            :value='option')
+        el-input(v-else-if='field.type === 2'
+          type='number'
+          v-model='field.value'
+          :name='field.name')
+      .tips(v-if='field.tips')
+        span {{ field.tips }}
+    .first-level
+      span 自定义字段
+    template(v-for='field in extendFields')
+      .second-level
+        .input-title(:class='{ "required": field.required }') {{ field.name }}
+        el-input(v-if='field.type === 0'
+          v-model='field.value'
+          :name='field.name')
+        el-select(v-else-if='field.type === 1'
+          v-model='field.value'
+          :name='field.name')
+          el-option(v-for='option in field.select'
+            :key='option'
+            :label='option'
+            :value='option')
+        el-input(v-else-if='field.type === 2'
+          type='number'
+          v-model='field.value'
+          :name='field.name')
+      .tips(v-if='field.tips')
+        span {{ field.tips }}
+    el-button(type='primary' @click='submit') 提交
 </template>
 
 <script>
 export default {
   data () {
     return {
-      username: '',
-      password: '',
-      confirmPassword: '',
-      name: '',
-      phone: '',
-      sex: 'man',
-      type: '',
-      idCard: '',
-      group: '',
-      researchGroup: ''
+      basicFields: [],
+      extendFields: []
     }
+  },
+  async mounted () {
+    let loading = this.$loading()
+    let result = await this.$axios.get(this.$config.app.getParams)
+    this.basicFields = result.data.basic
+    this.extendFields = result.data.extend
+    loading.close()
   },
   methods: {
     closeMessage () {
@@ -78,6 +83,45 @@ export default {
           this.closeMessageAnimate()
         }
       }, 10)
+    },
+    submit () {
+      let check = true
+      this.basicFields.forEach(field => {
+        if (!this.checkField(field)) check = false
+      })
+      this.extendFields.forEach(field => {
+        if (!this.checkField(field)) check = false
+      })
+
+      if (check) {
+        this.$refs.form.submit()
+      } else {
+        this.$message({
+          type: 'error',
+          message: '提交失败, 请验证是否填写正确'
+        })
+      }
+    },
+    checkField (field) {
+      // 验证必填
+      if (field.required && field.value === '') {
+        this.$set(field, 'tips', '请填写字段')
+        return false
+      }
+      // 特殊字段验证
+      switch (field.key) {
+        // 验证邮箱
+        case 'email':
+          let emailCheck = !field.value || /^\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]*\.)+[A-Za-z]{2,14}$/.test(field.value)
+          if (!emailCheck) this.$set(field, 'tips', '请输入正确的邮箱')
+          return emailCheck
+        case 'phone':
+          let phoneCheck = !field.value || /^1[34578]\d{9}$/.test(field.value)
+          if (!phoneCheck) this.$set(field, 'tips', '请输入正确的手机号码')
+          return phoneCheck
+      }
+      this.$set(field, 'tips', '')
+      return true
     }
   }
 }

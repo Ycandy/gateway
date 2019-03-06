@@ -4,31 +4,31 @@
     span 注册
   .form-board
     .first-level
-      span 账户信息
-    .second-level
-      .input-title 用户名
-      el-input
-    .second-level
-      .input-title 密码
-      el-input
-    .second-level
-      .input-title 确认密码
-      el-input
-    .first-level
-      span 不同的输入
-    .second-level
-      .input-title text输入
-      el-input
-    .second-level
-      .input-title select
-      el-select(v-model='select')
-        el-option(v-for='i in 5' :value='i' :key='i')
-    .second-level
-      .input-title select
-      el-radio-group(v-model='radio')
-        el-radio(label='male') 男
-        el-radio(label='female') 女
-    el-button(type='primary') 提交
+      span 基本信息
+    template(v-for='field in basicFields')
+      .second-level
+        .input-title(:class='{ "required": field.required }') {{ field.name }}
+        el-input(v-if='field.key === "password" || field.key === "repassword"'
+          type='password'
+          v-model='field.value'
+          :name='field.name')
+        el-input(v-else-if='field.type === 0'
+          v-model='field.value'
+          :name='field.name')
+        el-select(v-else-if='field.type === 1'
+          v-model='field.value'
+          :name='field.name')
+          el-option(v-for='option in field.select'
+            :key='option'
+            :label='option'
+            :value='option')
+        el-input(v-else-if='field.type === 2'
+          type='number'
+          v-model='field.value'
+          :name='field.name')
+      .tips(v-if='field.tips')
+        span {{ field.tips }}
+    el-button(type='primary' @click='submit') 提交
 </template>
 
 <script>
@@ -36,9 +36,61 @@
 export default {
   data () {
     return {
-      input: '',
-      select: '',
-      radio: ''
+      basicFields: []
+    }
+  },
+  async mounted () {
+    let loading = this.$loading()
+    let result = await this.$axios.get(this.$config.app.getParams)
+    this.basicFields = result.data.basic
+    loading.close()
+  },
+  methods: {
+    submit () {
+      let params = {}
+      let check = true
+      this.basicFields.forEach(field => {
+        if (!this.checkField(field)) check = false
+      })
+
+      if (check) {
+        this.$axios.post(this.$config.app.sign, {
+          data: params
+        })
+      } else {
+        this.$message({
+          type: 'error',
+          message: '提交失败, 请验证是否填写正确'
+        })
+      }
+    },
+    checkField (field) {
+      // 验证必填
+      if (field.required && field.value === '') {
+        this.$set(field, 'tips', '请填写字段')
+        return false
+      }
+      // 特殊字段验证
+      switch (field.key) {
+        // 验证邮箱
+        case 'email':
+          let emailCheck = !field.value || /^\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]*\.)+[A-Za-z]{2,14}$/.test(field.value)
+          if (!emailCheck) this.$set(field, 'tips', '请输入正确的邮箱')
+          return emailCheck
+        case 'phone':
+          let phoneCheck = !field.value || /^1[34578]\d{9}$/.test(field.value)
+          if (!phoneCheck) this.$set(field, 'tips', '请输入正确的手机号码')
+          return phoneCheck
+        case 'repassword':
+          let passwordField = this.basicFields.find(field => field.key === 'password')
+          if (field.value !== passwordField.value) {
+            this.$set(field, 'tips', '两次密码输入不一致')
+            return false
+          }
+          return true
+      }
+      this.$set(field, 'tips', '')
+      return true
     }
   }
 }
