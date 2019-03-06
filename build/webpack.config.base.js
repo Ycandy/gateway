@@ -3,7 +3,8 @@ const path = require('path')
 const webpack = require('webpack')
 const { VueLoaderPlugin } = require('vue-loader')
 const vueConfig = require('./vue-loader.config')
-const { prefix } = require('../config').route
+const config = require('../config')
+const { prefix } = config.route
 
 module.exports = {
   entry: {
@@ -67,7 +68,8 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env.DEPLOY_ENV': JSON.stringify(process.env.DEPLOY_ENV)
+      'process.env.DEPLOY_ENV': JSON.stringify(process.env.DEPLOY_ENV),
+      'CONFIG': JSON.stringify(config)
     }),
     new VueLoaderPlugin()
   ]

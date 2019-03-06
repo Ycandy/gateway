@@ -20,34 +20,51 @@
       //- .qq.type(:class='{ "active": active === "qq" }')
       //-   .icon-png
       //-   span QQ
-    .form(v-if='active === "account"')
+    form.form(v-if='active === "account"'
+      ref='form'
+      method='post'
+      :action='$config.app.login')
+      .input-group(v-show='false')
+        input(
+          name='redirect'
+          :value='$route.query.redirect')
+        input(
+          name='from'
+          :value='$route.query.from')
+        input(
+          name='genee_oauth'
+          :value='$route.query.genee_oauth')
       .input-group
         el-input.input(
           v-model='form.username'
+          name='username'
           placeholder="用户名")
           img(slot="prepend" width='18' height='18' src='public/image/user.png')
       .input-group
         el-input.input(
+          type='password'
           v-model='form.password'
+          name='password'
           placeholder="密码")
           img(slot="prepend" width='18' height='18' src='public/image/password.png')
-        .sign(@click='goSign()') 注册
-        .reset-password(@click='goReset()') 忘记密码
-      el-button.login-button(type="primary") 登&nbsp;&nbsp;录
+        .sign(@click='goSign') 注册
+        .reset-password(@click='goReset') 忘记密码
+      el-button.login-button(type="primary" @click='login') 登&nbsp;&nbsp;录
   .idea Research Gets Easier
 </template>
 
 <script>
-
 export default {
   data () {
     return {
       active: 'account',
       form: {
-        username: '',
-        password: ''
+        username: 'wenjun.zheng@geneegroup.com',
+        password: 'qq'
       }
     }
+  },
+  mounted () {
   },
   methods: {
     goSign () {
@@ -55,6 +72,9 @@ export default {
     },
     goReset () {
       this.$router.push({ name: 'reset' })
+    },
+    login () {
+      this.$refs.form.submit()
     }
   }
 }

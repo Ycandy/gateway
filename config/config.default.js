@@ -4,5 +4,8 @@ module.exports = {
   route: {
     prefix: '/gateway',
     port: 8001,
+  },
+  app: {
+    login: 'http://demo.gapper.in/gateway/auth'
   }
 }

@@ -11,12 +11,8 @@ export function createRouter (store) {
     base: `${prefix}/`,
     scrollBehavior: () => ({ y: 0 }),
     routes: [{
-      name: 'index',
-      path: '/',
-      component: r => require.ensure([], () => r(require('src/views/Index.vue')), 'index')
-    }, {
       name: 'login',
-      path: '/login',
+      path: '/',
       component: r => require.ensure([], () => r(require('src/views/Login.vue')), 'login')
     }, {
       name: 'complete',

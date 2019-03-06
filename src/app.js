@@ -30,6 +30,9 @@ Vue.use(Option)
 Vue.use(RadioGroup)
 Vue.use(Radio)
 
+/* eslint-disable no-undef */
+Vue.prototype.$config = CONFIG
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
