@@ -11,21 +11,21 @@
         el-input(v-if='field.key === "password" || field.key === "repassword"'
           type='password'
           v-model='field.value'
-          :name='field.name')
+          :name='field.key')
         el-input(v-else-if='field.type === 0'
           v-model='field.value'
-          :name='field.name')
+          :name='field.key')
         el-select(v-else-if='field.type === 1'
           v-model='field.value'
-          :name='field.name')
-          el-option(v-for='option in field.select'
-            :key='option'
+          :name='field.key')
+          el-option(v-for='option,dex in field.select'
+            :key='dex'
             :label='option'
-            :value='option')
+            :value='dex')
         el-input(v-else-if='field.type === 2'
           type='number'
           v-model='field.value'
-          :name='field.name')
+          :name='field.key')
       .tips(v-if='field.tips')
         span {{ field.tips }}
     el-button(type='primary' @click='submit') 提交
@@ -51,12 +51,22 @@ export default {
       let check = true
       this.basicFields.forEach(field => {
         if (!this.checkField(field)) check = false
+        params[field.key] = field.value
       })
 
       if (check) {
-        this.$axios.post(this.$config.app.sign, {
-          data: params
-        })
+        this.$axios.post(this.$config.app.sign, params)
+          .then(res => {
+            this.$router.push({ name: 'info' })
+          })
+          .catch(err => {
+            if (err.response.body === 'email already esists') {
+              this.$message({
+                type: 'error',
+                message: '邮箱已经存在'
+              })
+            }
+          })
       } else {
         this.$message({
           type: 'error',

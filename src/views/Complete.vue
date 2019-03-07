@@ -9,6 +9,16 @@
     ref='form'
     method='post'
     :action='$config.app.complete')
+    .input-group(v-show='false')
+      input(
+        name='redirect'
+        :value='$route.query.redirect')
+      input(
+        name='from'
+        :value='$route.query.from')
+      input(
+        name='genee_oauth'
+        :value='$route.query.genee_oauth')
     .first-level
       span 基本信息
     template(v-for='field in basicFields')
@@ -16,10 +26,10 @@
         .input-title(:class='{ "required": field.required }') {{ field.name }}
         el-input(v-if='field.type === 0'
           v-model='field.value'
-          :name='field.name')
+          :name='field.key')
         el-select(v-else-if='field.type === 1'
           v-model='field.value'
-          :name='field.name')
+          :name='field.key')
           el-option(v-for='option in field.select'
             :key='option'
             :label='option'
@@ -27,7 +37,7 @@
         el-input(v-else-if='field.type === 2'
           type='number'
           v-model='field.value'
-          :name='field.name')
+          :name='field.key')
       .tips(v-if='field.tips')
         span {{ field.tips }}
     .first-level
@@ -37,10 +47,10 @@
         .input-title(:class='{ "required": field.required }') {{ field.name }}
         el-input(v-if='field.type === 0'
           v-model='field.value'
-          :name='field.name')
+          :name='field.key')
         el-select(v-else-if='field.type === 1'
           v-model='field.value'
-          :name='field.name')
+          :name='field.key')
           el-option(v-for='option in field.select'
             :key='option'
             :label='option'
@@ -48,7 +58,7 @@
         el-input(v-else-if='field.type === 2'
           type='number'
           v-model='field.value'
-          :name='field.name')
+          :name='field.key')
       .tips(v-if='field.tips')
         span {{ field.tips }}
     el-button(type='primary' @click='submit') 提交
