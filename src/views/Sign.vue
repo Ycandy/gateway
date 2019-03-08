@@ -16,6 +16,25 @@
     .tips(v-if='tips.email')
       span {{ tips.email }}
     .second-level
+      .input-title.required 用户类型
+      el-select(v-model='form.type'
+        name='type'
+        placeholder='用户类型')
+        el-option(
+          value='student'
+          label='学生'
+        )
+        el-option(
+          value='teacher'
+          label='教师'
+        )
+        el-option(
+          value='other'
+          label='校外用户'
+        )
+    .tips(v-if='tips.type')
+      span {{ tips.type }}
+    .second-level
       .input-title.required 密码
       el-input(v-model='form.password'
         type='password'
@@ -59,6 +78,7 @@ export default {
       form: {
         name: '',
         email: '',
+        type: '',
         password: '',
         repassword: '',
         organization: []
@@ -66,6 +86,7 @@ export default {
       tips: {
         name: '',
         email: '',
+        type: '',
         password: '',
         repassword: ''
       }
@@ -130,6 +151,13 @@ export default {
         check = false
       } else {
         tips.email = ''
+      }
+
+      if (!form.type) {
+        tips.type = '请选择用户类型'
+        check = false
+      } else {
+        tips.type = ''
       }
 
       if (!form.password) {
