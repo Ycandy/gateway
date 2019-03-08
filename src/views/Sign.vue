@@ -40,8 +40,7 @@
         placeholder='组织机构'
         :options='organization'
         :props='cascaderProps'
-        :show-all-levels='false'
-        @active-item-change="handleItemChange")
+        :show-all-levels='false')
       .tips(v-if='tips.lab') {{ tips.lab }}
     el-button(type='primary' @click='submit') 提交
 </template>
@@ -53,7 +52,7 @@ export default {
     return {
       organization: [],
       cascaderProps: {
-        value: 'value',
+        value: 'id',
         label: 'name',
         children: 'children'
       },
@@ -90,13 +89,25 @@ export default {
       }
     },
     parseOrganization (organization) {
-      return organization.map((item, index) => {
-        item.value = '' + index
-        if (!item.is_lab) {
-          item.children = []
+      let parent = {}
+      organization.forEach(item => {
+        if (!Reflect.has(parent, item.parent_id)) {
+          Reflect.set(parent, item.parent_id, {})
         }
-        return item
+        Reflect.set(parent[item.parent_id], item.id, item)
       })
+
+      let key = Object.values(parent.null)[0].id
+      return this.pushOrganizationChildren(key, parent)
+    },
+    pushOrganizationChildren (key, parent) {
+      let result = Object.values(parent[key])
+      result.forEach(item => {
+        if (Reflect.has(parent, item.id)) {
+          item.children = this.pushOrganizationChildren(item.id, parent)
+        }
+      })
+      return result
     },
     submit () {
       let check = true
