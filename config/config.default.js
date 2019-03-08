@@ -8,7 +8,7 @@ module.exports = {
   app: {
     login: 'http://demo.gapper.in/gateway/auth',
     getParams: 'http://demo.gapper.in/gateway/user/field',
-    sign: 'http://demo.gapper.in/gateway/user/sign',
+    sign: 'http://demo.gapper.in/gateway/user/regist',
     info: 'http://demo.gapper.in/gateway/user/info',
     complete: 'http://demo.gapper.in/gateway/user/improve-info',
     redirect: 'http://demo.gapper.in/gateway/judge-login',
