@@ -59,18 +59,18 @@ const webpackConfig = merge(baseConfig, {
       root: path.join(__dirname, '../'),
       verbose: true
     }),
-    // DllReferencePlugin
-    ...Object.keys(bundlePkg).map(name => {
-      return new webpack.DllReferencePlugin({
-        manifest: require(`../dll/${name}-manifest.json`) 
-      })
-    }),
     // 将DllPlugin生成的文件移入dist目录
     new CopyWebpackPlugin([{
       from: path.resolve(__dirname, '../dll/js'),
       to: path.resolve(__dirname, '../dist'),
       ignore: ['.json']
     }]),
+    // DllReferencePlugin
+    ...Object.keys(bundlePkg).map(name => {
+      return new webpack.DllReferencePlugin({
+        manifest: require(`../dll/${name}-manifest.json`)
+      })
+    }),
     // 多线程打包
     new HappyPack({
       id: 'happyBabel',

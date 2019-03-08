@@ -9,7 +9,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 module.exports = {
   mode: 'production',
   entry: {
-    vue: ['vue', 'vuex', 'vue-router', 'vuex-router-sync']
+    vue: ['vue/dist/vue.js', 'vuex', 'vue-router', 'vuex-router-sync']
   },
   output: {
     path: path.join(__dirname, '../dll/js/'),
