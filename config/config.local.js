@@ -11,6 +11,7 @@ module.exports = {
     sign: 'http://gateway.cn/gateway/user/regist',
     info: 'http://gateway.cn/gateway/user/info',
     complete: 'http://gateway.cn/gateway/user/improve-info',
-    redirect: 'http://gateway.cn/gateway/judge-login'
+    redirect: 'http://gateway.cn/gateway/judge-login',
+    getOrganization: 'http://gateway.cn/gateway/group/list'
   }
 }

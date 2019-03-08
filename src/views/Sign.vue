@@ -6,6 +6,11 @@
     .first-level
       span 基本信息
     .second-level
+      .input-title.required 姓名
+      el-input(v-model='form.name' name='name' placeholder='姓名')
+    .tips(v-if='tips.name')
+      span {{ tips.name }}
+    .second-level
       .input-title.required 邮箱
       el-input(v-model='form.email' name='email' placeholder='邮箱')
     .tips(v-if='tips.email')
@@ -53,12 +58,14 @@ export default {
         children: 'children'
       },
       form: {
+        name: '',
         email: '',
         password: '',
         repassword: '',
         organization: []
       },
       tips: {
+        name: '',
         email: '',
         password: '',
         repassword: ''
@@ -78,7 +85,7 @@ export default {
         item = item.children[index]
       })
       if (item.children.length === 0) {
-        let result = await this.$axios.get(`${this.$config.app.getOrganization}\${val}`)
+        let result = await this.$axios.get(`${this.$config.app.getOrganization}/${item.id}`)
         this.$set(item, 'children', this.parseOrganization(result.data))
       }
     },
@@ -92,11 +99,18 @@ export default {
       })
     },
     submit () {
-      let params = {}
       let check = true
 
       let form = this.form
       let tips = this.tips
+
+      if (!form.name) {
+        tips.name = '请输入姓名'
+        check = false
+      } else {
+        tips.name = ''
+      }
+
       if (!form.email) {
         tips.email = '请输入邮箱'
         check = false
@@ -125,7 +139,7 @@ export default {
       }
 
       if (check) {
-        this.$axios.post(this.$config.app.sign, params)
+        this.$axios.post(this.$config.app.sign, form)
           .then(res => {
             this.$router.push({ name: 'info' })
           })
