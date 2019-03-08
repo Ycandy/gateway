@@ -4,6 +4,26 @@ const Mock = require('mockjs')
 /* eslint-disable no-undef */
 const config = CONFIG
 
+Mock.mock(config.app.getOrganization, 'get', () => {
+  return [{
+    id: '1',
+    name: '测试分组1',
+    is_lab: false
+  }, {
+    id: '2',
+    name: '测试分组2',
+    is_lab: false
+  }, {
+    id: '3',
+    name: '测试分组3',
+    is_lab: false
+  }, {
+    id: '4',
+    name: '测试课题组',
+    is_lab: true
+  }]
+})
+
 Mock.mock(config.app.info, 'get', () => {
   return {
     name: '测试',

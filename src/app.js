@@ -3,7 +3,7 @@ import App from './App.vue'
 import { createStore } from './store'
 import { createRouter } from './router'
 import { sync } from 'vuex-router-sync'
-import { Input, Button, Select, Option, RadioGroup, Radio, Loading, Message } from 'element-ui'
+import { Input, Button, Select, Option, RadioGroup, Radio, Loading, Message, Cascader } from 'element-ui'
 import axios from 'axios'
 // import './mock'
 
@@ -33,6 +33,7 @@ Vue.use(Select)
 Vue.use(Option)
 Vue.use(RadioGroup)
 Vue.use(Radio)
+Vue.use(Cascader)
 
 axios.defaults.timeout = 5000
 axios.defaults.withCredentials = true

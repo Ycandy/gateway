@@ -5,29 +5,39 @@
   .form-board
     .first-level
       span 基本信息
-    template(v-for='field in basicFields')
-      .second-level
-        .input-title(:class='{ "required": field.required }') {{ field.name }}
-        el-input(v-if='field.key === "password" || field.key === "repassword"'
-          type='password'
-          v-model='field.value'
-          :name='field.key')
-        el-input(v-else-if='field.type === 0'
-          v-model='field.value'
-          :name='field.key')
-        el-select(v-else-if='field.type === 1'
-          v-model='field.value'
-          :name='field.key')
-          el-option(v-for='option,dex in field.select'
-            :key='dex'
-            :label='option'
-            :value='dex')
-        el-input(v-else-if='field.type === 2'
-          type='number'
-          v-model='field.value'
-          :name='field.key')
-      .tips(v-if='field.tips')
-        span {{ field.tips }}
+    .second-level
+      .input-title.required 邮箱
+      el-input(v-model='form.email' name='email' placeholder='邮箱')
+    .tips(v-if='tips.email')
+      span {{ tips.email }}
+    .second-level
+      .input-title.required 密码
+      el-input(v-model='form.password'
+        type='password'
+        name='password'
+        placeholder='密码')
+    .tips(v-if='tips.password')
+      span {{ tips.password }}
+    .second-level
+      .input-title.required 请重复密码
+      el-input(v-model='form.repassword'
+        type='password'
+        name='repassword'
+        placeholder='请重复密码')
+    .tips(v-if='tips.repassword')
+      span {{ tips.repassword }}
+    .second-level
+      .input-title.required 组织机构
+      el-cascader(
+        ref='cascader'
+        v-model='form.organization'
+        name='organization'
+        placeholder='组织机构'
+        :options='organization'
+        :props='cascaderProps'
+        :show-all-levels='false'
+        @active-item-change="handleItemChange")
+      .tips(v-if='tips.lab') {{ tips.lab }}
     el-button(type='primary' @click='submit') 提交
 </template>
 
@@ -36,23 +46,83 @@
 export default {
   data () {
     return {
-      basicFields: []
+      organization: [],
+      cascaderProps: {
+        value: 'value',
+        label: 'name',
+        children: 'children'
+      },
+      form: {
+        email: '',
+        password: '',
+        repassword: '',
+        organization: []
+      },
+      tips: {
+        email: '',
+        password: '',
+        repassword: ''
+      }
     }
   },
   async mounted () {
     let loading = this.$loading()
-    let result = await this.$axios.get(this.$config.app.getParams)
-    this.basicFields = result.data.basic
+    let result = await this.$axios.get(this.$config.app.getOrganization)
+    this.organization = this.parseOrganization(result.data)
     loading.close()
   },
   methods: {
+    async handleItemChange (path) {
+      let item = { children: this.organization }
+      path.forEach(index => {
+        item = item.children[index]
+      })
+      if (item.children.length === 0) {
+        let result = await this.$axios.get(`${this.$config.app.getOrganization}\${val}`)
+        this.$set(item, 'children', this.parseOrganization(result.data))
+      }
+    },
+    parseOrganization (organization) {
+      return organization.map((item, index) => {
+        item.value = '' + index
+        if (!item.is_lab) {
+          item.children = []
+        }
+        return item
+      })
+    },
     submit () {
       let params = {}
       let check = true
-      this.basicFields.forEach(field => {
-        if (!this.checkField(field)) check = false
-        params[field.key] = field.value
-      })
+
+      let form = this.form
+      let tips = this.tips
+      if (!form.email) {
+        tips.email = '请输入邮箱'
+        check = false
+      } else if (!/^\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]*\.)+[A-Za-z]{2,14}$/.test(form.email)) {
+        tips.email = '请输入正确的邮箱格式'
+        check = false
+      } else {
+        tips.email = ''
+      }
+
+      if (!form.password) {
+        tips.password = '请输入密码'
+        check = false
+      } else {
+        tips.password = ''
+      }
+
+      if (!form.repassword) {
+        tips.repassword = '请输入密码'
+        check = false
+      } else if (form.password !== form.repassword) {
+        tips.repassword = '两次输入的密码不一致'
+        check = false
+      } else {
+        tips.repassword = ''
+      }
 
       if (check) {
         this.$axios.post(this.$config.app.sign, params)
@@ -73,34 +143,6 @@ export default {
           message: '提交失败, 请验证是否填写正确'
         })
       }
-    },
-    checkField (field) {
-      // 验证必填
-      if (field.required && field.value === '') {
-        this.$set(field, 'tips', '请填写字段')
-        return false
-      }
-      // 特殊字段验证
-      switch (field.key) {
-        // 验证邮箱
-        case 'email':
-          let emailCheck = !field.value || /^\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]*\.)+[A-Za-z]{2,14}$/.test(field.value)
-          if (!emailCheck) this.$set(field, 'tips', '请输入正确的邮箱')
-          return emailCheck
-        case 'phone':
-          let phoneCheck = !field.value || /^1[34578]\d{9}$/.test(field.value)
-          if (!phoneCheck) this.$set(field, 'tips', '请输入正确的手机号码')
-          return phoneCheck
-        case 'repassword':
-          let passwordField = this.basicFields.find(field => field.key === 'password')
-          if (field.value !== passwordField.value) {
-            this.$set(field, 'tips', '两次密码输入不一致')
-            return false
-          }
-          return true
-      }
-      this.$set(field, 'tips', '')
-      return true
     }
   }
 }
