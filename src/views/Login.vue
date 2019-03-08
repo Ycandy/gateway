@@ -59,8 +59,8 @@ export default {
     return {
       active: 'account',
       form: {
-        username: 'wenjun.zheng@geneegroup.com',
-        password: 'qq'
+        username: '',
+        password: ''
       }
     }
   },
