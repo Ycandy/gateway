@@ -4,9 +4,18 @@
   .form-board
     .first-level
       span 个人信息
-    .second-level(v-for='(value, key) in info')
-      .input-title {{ key }}
-      .input-title {{ value }}
+    .second-level
+      .input-title 姓名
+      .input-title {{ info.name }}
+    .second-level
+      .input-title 邮箱
+      .input-title {{ info.email }}
+    .second-level
+      .input-title 用户类型
+      .input-title {{ type[info.type] }}
+    .second-level
+      .input-title 组织机构
+      .input-title {{ info.organization }}
     .bottom
 </template>
 
@@ -15,6 +24,11 @@ export default {
   data () {
     return {
       info: {},
+      type: {
+        'student': '学生',
+        'teacher': '教师',
+        'other': '校外用户'
+      },
       status: '',
       message: {
         'status_register': '等待审核,  若管理员超过 1 天还未激活您的账号,  请及时联系管理员为您激活账号',
