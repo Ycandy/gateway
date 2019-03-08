@@ -13,7 +13,8 @@
       el-input(style='width: 200px' v-model='inputCode')
       .id-code(@click='createCode') {{ checkCode }}
       span.error-log(v-if='show') {{ tip }}
-    el-button(type='primary' @click='submit') 提交
+    .button-line
+      el-button(type='primary' @click='submit') 提交
 </template>
 
 <script>

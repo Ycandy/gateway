@@ -16,8 +16,8 @@
   font-size 16px
 .form-board
   width 50%
-  display flex
-  overflow hidden
+  // display flex
+  overflow auto
   flex-direction column
   justify-content flex-start
   align-items center
@@ -43,6 +43,7 @@
     flex-wrap nowrap
     justify-content flex-start
     align-items center
+    margin-bottom: 10px;
     .input-title
       width 90px
       flex-shrink 0
@@ -53,6 +54,10 @@
       font-size 12px
     .el-cascader
       width 100%
+  .button-line
+    width 100%
+    height 48px
+    text-align: center
   .tips
     width 100%
     font-size 12px
@@ -75,3 +80,6 @@
   content '*'
   color #CC6561
   padding-left 6px
+
+.submit
+  margin: 0 auto

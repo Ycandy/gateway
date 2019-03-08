@@ -61,7 +61,8 @@
           :name='field.key')
       .tips(v-if='field.tips')
         span {{ field.tips }}
-    el-button(type='primary' @click='submit') 提交
+    .button-line
+      el-button(type='primary' @click='submit' class='submit') 提交
 </template>
 
 <script>

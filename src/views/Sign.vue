@@ -61,7 +61,8 @@
         :props='cascaderProps'
         :show-all-levels='false')
       .tips(v-if='tips.lab') {{ tips.lab }}
-    el-button(type='primary' @click='submit') 提交
+    .button-line
+      el-button(type='primary' @click='submit') 提交
 </template>
 
 <script>
