@@ -6,11 +6,11 @@
       .account.type(:class='{ "active": active === "account" }'
         @click='active = "account"')
         .icon-png
-        span 账号密码
+        span 校外用户
       .card.type(:class='{ "active": active === "card" }'
         @click='active = "card"')
         .icon-png
-        span 一卡通
+        span 校内用户
       //- .wechat.type(:class='{ "active": active === "wechat" }')
       //-   .icon-png
       //-   span 微信
