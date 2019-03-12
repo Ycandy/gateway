@@ -44,7 +44,6 @@
     .second-level
       .input-title.required 人员类型
       el-select(v-model='basicFields.type.value'
-        name='type'
         placeholder='用户类型')
         el-option(
           value='student'
@@ -58,6 +57,7 @@
           value='other'
           label='校外用户'
         )
+      input(type='hidden' v-model='basicFields.type.value' name='type')
     .tips(v-if='basicFields.type.tips')
       span {{ basicFields.type.tips }}
     .second-level
@@ -69,15 +69,17 @@
       .input-title 所属分组
       el-cascader(
         ref='cascader'
-        v-model='basicFields.group.value'
+        v-model='basicFields.group.path'
         name='group'
         placeholder='所属分组'
         :options='organization'
         :props='cascaderProps'
         clearable
         filterable
-        change-on-select)
-      .tips(v-if='basicFields.group.tips') {{ basicFields.group.tips }}
+        change-on-select
+        @change='changeGroup')
+      input(type='hidden' name='group' v-model='basicFields.group.value')
+    .tips(v-if='basicFields.group.tips') {{ basicFields.group.tips }}
     .first-level
       span 其他信息
     template(v-for='field in extendFields')
@@ -123,6 +125,18 @@ export default {
     let paramsResult = await this.$axios.get(this.$config.app.getParams)
     let basicFields = {}
     paramsResult.data.basic.forEach(item => {
+      if (item.key === 'group') {
+        let path = []
+        if (item.value) {
+          let cur = organizationResult.data.find(group => group.id === item.value)
+          path = [cur.id]
+          while (cur.parent_id) {
+            cur = organizationResult.data.find(group => group.id === cur.parent_id)
+            path.splice(0, 0, cur.id)
+          }
+        }
+        item.path = path
+      }
       Reflect.set(basicFields, item.key, item)
     })
     this.basicFields = basicFields
@@ -165,6 +179,9 @@ export default {
           this.closeMessageAnimate()
         }
       }, 10)
+    },
+    changeGroup (value) {
+      this.basicFields.group.value = value[value.length - 1]
     },
     submit () {
       let check = true

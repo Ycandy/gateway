@@ -5,7 +5,7 @@ import { createRouter } from './router'
 import { sync } from 'vuex-router-sync'
 import { Input, Button, Select, Option, RadioGroup, Radio, Loading, Message, Cascader } from 'element-ui'
 import axios from 'axios'
-import './mock'
+// import './mock'
 
 const store = createStore()
 

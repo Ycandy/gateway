@@ -73,8 +73,10 @@
         :props='cascaderProps'
         clearable
         filterable
-        change-on-select)
+        change-on-select
+        @change='changeGroup')
       .tips(v-if='tips.lab') {{ tips.lab }}
+      input(type='hidden' name='group' v-model='form.group')
     el-button(type='primary' @click='submit') 提交
 </template>
 
@@ -97,7 +99,8 @@ export default {
         phone: '',
         type: '',
         card: '',
-        organization: []
+        organization: [],
+        group: ''
       },
       tips: {
         email: '',
@@ -147,6 +150,9 @@ export default {
         }
       })
       return result
+    },
+    changeGroup (value) {
+      this.form.group = value[value.length - 1]
     },
     submit () {
       let check = true
@@ -205,7 +211,7 @@ export default {
       if (check) {
         this.$axios.post(this.$config.app.sign, form)
           .then(res => {
-            this.$router.push({ name: 'info' })
+            this.$router.push({ name: 'info', query: { genee_oauth: this.$route.query.genee_oauth } })
           })
           .catch(err => {
             if (err.response.body === 'email already esists') {
