@@ -83,6 +83,66 @@ Mock.mock(config.app.getParams, 'get', () => {
         'select': [
           '1', '2', '3'
         ]
+      },
+      {
+        'name': 'card_no_s',
+        'key': 'card_no_s',
+        'required': true,
+        'type': 1,
+        'value': '',
+        'select': [
+          '1', '2', '3'
+        ]
+      },
+      {
+        'name': 'card_no_s',
+        'key': 'card_no_s',
+        'required': true,
+        'type': 1,
+        'value': '',
+        'select': [
+          '1', '2', '3'
+        ]
+      },
+      {
+        'name': 'card_no_s',
+        'key': 'card_no_s',
+        'required': true,
+        'type': 1,
+        'value': '',
+        'select': [
+          '1', '2', '3'
+        ]
+      },
+      {
+        'name': 'card_no_s',
+        'key': 'card_no_s',
+        'required': true,
+        'type': 1,
+        'value': '',
+        'select': [
+          '1', '2', '3'
+        ]
+      },
+      {
+        'name': 'card_no_s',
+        'key': 'card_no_s',
+        'required': true,
+        'type': 1,
+        'value': '',
+        'select': [
+          '1', '2', '3'
+        ]
+      },
+      {
+        'name': 'card_no_s',
+        'key': 'card_no_s',
+        'required': true,
+        'type': 1,
+        'value': '',
+        'select': [
+          '1', '2', '3'
+        ]
       }
     ]
   }
