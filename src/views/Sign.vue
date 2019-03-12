@@ -4,19 +4,42 @@
     span 注册
   .form-board
     .first-level
-      span 基本信息
-    .second-level
-      .input-title.required 姓名
-      el-input(v-model='form.name' name='name' placeholder='姓名')
-    .tips(v-if='tips.name')
-      span {{ tips.name }}
+      span 账户信息
     .second-level
       .input-title.required 邮箱
       el-input(v-model='form.email' name='email' placeholder='邮箱')
     .tips(v-if='tips.email')
       span {{ tips.email }}
     .second-level
-      .input-title.required 用户类型
+      .input-title.required 密码
+      el-input(v-model='form.password'
+        type='password'
+        name='password'
+        placeholder='密码')
+    .tips(v-if='tips.password')
+      span {{ tips.password }}
+    .second-level
+      .input-title.required 请重复密码
+      el-input(v-model='form.repassword'
+        type='password'
+        name='repassword'
+        placeholder='请重复密码')
+    .tips(v-if='tips.repassword')
+      span {{ tips.repassword }}
+    .first-level
+      span 个人信息
+    .second-level
+      .input-title.required 姓名
+      el-input(v-model='form.name' name='name' placeholder='姓名')
+    .tips(v-if='tips.name')
+      span {{ tips.name }}
+    .second-level
+      .input-title 联系电话
+      el-input(v-model='form.phone' name='phone' placeholder='联系电话')
+    .tips(v-if='tips.phone')
+      span {{ tips.phone }}
+    .second-level
+      .input-title.required 人员类型
       el-select(v-model='form.type'
         name='type'
         placeholder='用户类型')
@@ -35,31 +58,22 @@
     .tips(v-if='tips.type')
       span {{ tips.type }}
     .second-level
-      .input-title.required 密码
-      el-input(v-model='form.password'
-        type='password'
-        name='password'
-        placeholder='密码')
-    .tips(v-if='tips.password')
-      span {{ tips.password }}
+      .input-title 学工号
+      el-input(v-model='form.card' name='card' placeholder='学工号')
+    .tips(v-if='tips.card')
+      span {{ tips.card }}
     .second-level
-      .input-title.required 请重复密码
-      el-input(v-model='form.repassword'
-        type='password'
-        name='repassword'
-        placeholder='请重复密码')
-    .tips(v-if='tips.repassword')
-      span {{ tips.repassword }}
-    .second-level
-      .input-title.required 组织机构
+      .input-title 所属分组
       el-cascader(
         ref='cascader'
         v-model='form.organization'
         name='organization'
-        placeholder='组织机构'
+        placeholder='所属分组'
         :options='organization'
         :props='cascaderProps'
-        :show-all-levels='false')
+        clearable
+        filterable
+        change-on-select)
       .tips(v-if='tips.lab') {{ tips.lab }}
     el-button(type='primary' @click='submit') 提交
 </template>
@@ -76,19 +90,23 @@ export default {
         children: 'children'
       },
       form: {
-        name: '',
         email: '',
-        type: '',
         password: '',
         repassword: '',
+        name: '',
+        phone: '',
+        type: '',
+        card: '',
         organization: []
       },
       tips: {
-        name: '',
         email: '',
-        type: '',
         password: '',
-        repassword: ''
+        repassword: '',
+        name: '',
+        phone: '',
+        type: '',
+        card: ''
       }
     }
   },
@@ -136,13 +154,6 @@ export default {
       let form = this.form
       let tips = this.tips
 
-      if (!form.name) {
-        tips.name = '请输入姓名'
-        check = false
-      } else {
-        tips.name = ''
-      }
-
       if (!form.email) {
         tips.email = '请输入邮箱'
         check = false
@@ -151,13 +162,6 @@ export default {
         check = false
       } else {
         tips.email = ''
-      }
-
-      if (!form.type) {
-        tips.type = '请选择用户类型'
-        check = false
-      } else {
-        tips.type = ''
       }
 
       if (!form.password) {
@@ -175,6 +179,27 @@ export default {
         check = false
       } else {
         tips.repassword = ''
+      }
+
+      if (!form.name) {
+        tips.name = '请输入姓名'
+        check = false
+      } else {
+        tips.name = ''
+      }
+
+      if (form.phone && !/^1(3|4|5|7|8)\d{9}$/.test(form.phone)) {
+        tips.phone = '请输入正确的手机号'
+        check = false
+      } else {
+        tips.phone = ''
+      }
+
+      if (!form.type) {
+        tips.type = '请选择用户类型'
+        check = false
+      } else {
+        tips.type = ''
       }
 
       if (check) {

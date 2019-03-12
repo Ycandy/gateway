@@ -6,6 +6,7 @@
     span 你好!&nbsp;&nbsp;您是首次登录,&nbsp;&nbsp;请首先补全信息
     i.el-icon-close(style='cursor: pointer;margin-left: 20px;' @click='closeMessage')
   form.form-board(
+    v-if='load'
     ref='form'
     method='post'
     :action='$config.app.complete')
@@ -20,28 +21,65 @@
         name='genee_oauth'
         :value='$route.query.genee_oauth')
     .first-level
-      span 基本信息
-    template(v-for='field in basicFields')
-      .second-level
-        .input-title(:class='{ "required": field.required }') {{ field.name }}
-        el-input(v-if='field.type === 0'
-          v-model='field.value'
-          :name='field.key')
-        el-select(v-else-if='field.type === 1'
-          v-model='field.value'
-          :name='field.key')
-          el-option(v-for='option in field.select'
-            :key='option'
-            :label='option'
-            :value='option')
-        el-input(v-else-if='field.type === 2'
-          type='number'
-          v-model='field.value'
-          :name='field.key')
-      .tips(v-if='field.tips')
-        span {{ field.tips }}
+      span 账号信息
+    .second-level
+      .input-title.required 邮箱
+      el-input(
+        v-model='basicFields.email.value'
+        name='email')
+    .tips(v-if='basicFields.email.tips')
+      span {{ basicFields.email.tips }}
     .first-level
-      span 自定义字段
+      span 个人信息
+    .second-level
+      .input-title.required 姓名
+      el-input(v-model='basicFields.name.value' name='name' placeholder='姓名')
+    .tips(v-if='basicFields.name.tips')
+      span {{ basicFields.name.tips }}
+    .second-level
+      .input-title 联系电话
+      el-input(v-model='basicFields.phone.value' name='phone' placeholder='联系电话')
+    .tips(v-if='basicFields.phone.tips')
+      span {{ basicFields.phone.tips }}
+    .second-level
+      .input-title.required 人员类型
+      el-select(v-model='basicFields.type.value'
+        name='type'
+        placeholder='用户类型')
+        el-option(
+          value='student'
+          label='学生'
+        )
+        el-option(
+          value='teacher'
+          label='教师'
+        )
+        el-option(
+          value='other'
+          label='校外用户'
+        )
+    .tips(v-if='basicFields.type.tips')
+      span {{ basicFields.type.tips }}
+    .second-level
+      .input-title 学工号
+      el-input(v-model='basicFields.ref_no.value' name='ref_no' placeholder='学工号')
+    .tips(v-if='basicFields.ref_no.tips')
+      span {{ basicFields.ref_no.tips }}
+    .second-level
+      .input-title 所属分组
+      el-cascader(
+        ref='cascader'
+        v-model='basicFields.group.value'
+        name='group'
+        placeholder='所属分组'
+        :options='organization'
+        :props='cascaderProps'
+        clearable
+        filterable
+        change-on-select)
+      .tips(v-if='basicFields.group.tips') {{ basicFields.group.tips }}
+    .first-level
+      span 其他信息
     template(v-for='field in extendFields')
       .second-level
         .input-title(:class='{ "required": field.required }') {{ field.name }}
@@ -68,18 +106,52 @@
 export default {
   data () {
     return {
-      basicFields: [],
-      extendFields: []
+      basicFields: {},
+      extendFields: [],
+      cascaderProps: {
+        value: 'id',
+        label: 'name',
+        children: 'children'
+      },
+      load: false
     }
   },
   async mounted () {
     let loading = this.$loading()
-    let result = await this.$axios.get(this.$config.app.getParams)
-    this.basicFields = result.data.basic
-    this.extendFields = result.data.extend
+    let organizationResult = await this.$axios.get(this.$config.app.getOrganization)
+    this.organization = this.parseOrganization(organizationResult.data)
+    let paramsResult = await this.$axios.get(this.$config.app.getParams)
+    let basicFields = {}
+    paramsResult.data.basic.forEach(item => {
+      Reflect.set(basicFields, item.key, item)
+    })
+    this.basicFields = basicFields
+    this.extendFields = paramsResult.data.extend
+    this.load = true
     loading.close()
   },
   methods: {
+    parseOrganization (organization) {
+      let parent = {}
+      organization.forEach(item => {
+        if (!Reflect.has(parent, item.parent_id)) {
+          Reflect.set(parent, item.parent_id, {})
+        }
+        Reflect.set(parent[item.parent_id], item.id, item)
+      })
+
+      let key = Object.values(parent.null)[0].id
+      return this.pushOrganizationChildren(key, parent)
+    },
+    pushOrganizationChildren (key, parent) {
+      let result = Object.values(parent[key])
+      result.forEach(item => {
+        if (Reflect.has(parent, item.id)) {
+          item.children = this.pushOrganizationChildren(item.id, parent)
+        }
+      })
+      return result
+    },
     closeMessage () {
       this.closeMessageAnimate()
     },
@@ -96,7 +168,7 @@ export default {
     },
     submit () {
       let check = true
-      this.basicFields.forEach(field => {
+      Object.values(this.basicFields).forEach(field => {
         if (!this.checkField(field)) check = false
       })
       this.extendFields.forEach(field => {
