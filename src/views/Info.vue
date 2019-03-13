@@ -5,17 +5,23 @@
     .first-level
       span 个人信息
     .second-level
+      .input-title 用户名
+      .input-title.last {{ info.email }}
+    .second-level
       .input-title 姓名
-      .input-title {{ info.name }}
+      .input-title.last {{ info.name }}
     .second-level
-      .input-title 邮箱
-      .input-title {{ info.email }}
+      .input-title 联系电话
+      .input-title.last {{ info.phone }}
     .second-level
-      .input-title 用户类型
-      .input-title {{ type[info.type] }}
+      .input-title 人员类型
+      .input-title.last {{ type[info.type] }}
     .second-level
-      .input-title 组织机构
-      .input-title {{ info.organization }}
+      .input-title 学工号
+      .input-title.last {{ info.ref_no }}
+    .second-level
+      .input-title 分组
+      .input-title.last {{ info.group }}
     .bottom
 </template>
 
@@ -45,7 +51,7 @@ export default {
     // status_normal 通过
     if (data.status === 'status_normal') {
       // 审核通过则跳转
-      window.location.href = this.$config.app.redirect
+      this.$router.push({ name: 'complete', query: { genee_oauth: this.$route.query.genee_oauth } })
     }
     this.status = data.status
     this.info = data
@@ -58,4 +64,7 @@ export default {
 <style lang="stylus" scoped>
 .bottom
   margin-bottom 40px
+.last
+  flex 1
+  text-align left
 </style>

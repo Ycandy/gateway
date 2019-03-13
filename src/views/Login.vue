@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     goSign () {
-      this.$router.push({ name: 'sign' })
+      this.$router.push({ name: 'sign', query: { genee_oauth: this.$route.query.genee_oauth } })
     },
     goReset () {
       this.$router.push({ name: 'reset' })

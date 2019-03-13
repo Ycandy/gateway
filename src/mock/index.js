@@ -4,26 +4,6 @@ const Mock = require('mockjs')
 /* eslint-disable no-undef */
 const config = CONFIG
 
-Mock.mock(config.app.getOrganization, 'get', () => {
-  return [{
-    id: '1',
-    name: '测试分组1',
-    is_lab: false
-  }, {
-    id: '2',
-    name: '测试分组2',
-    is_lab: false
-  }, {
-    id: '3',
-    name: '测试分组3',
-    is_lab: false
-  }, {
-    id: '4',
-    name: '测试课题组',
-    is_lab: true
-  }]
-})
-
 Mock.mock(config.app.info, 'get', () => {
   return {
     name: '测试',
@@ -37,25 +17,11 @@ Mock.mock(config.app.getParams, 'get', () => {
   return {
     'basic': [
       {
-        'name': '学工号',
-        'key': 'ref_no',
+        'name': '邮箱',
+        'key': 'email',
         'required': true,
         'type': 0,
         'value': 'test@geneegroup.com'
-      },
-      {
-        'name': '密码',
-        'key': 'password',
-        'required': true,
-        'type': 0,
-        'value': ''
-      },
-      {
-        'name': '重复摩玛',
-        'key': 'repassword',
-        'required': true,
-        'type': 0,
-        'value': ''
       },
       {
         'name': '姓名',
@@ -72,11 +38,25 @@ Mock.mock(config.app.getParams, 'get', () => {
         'value': ''
       },
       {
-        'name': '邮箱',
-        'key': 'email',
+        'name': '人员类型',
+        'key': 'type',
+        'required': true,
+        'type': 0,
+        'value': ''
+      },
+      {
+        'name': '学工号',
+        'key': 'ref_no',
         'required': true,
         'type': 0,
         'value': 'test@geneegroup.com'
+      },
+      {
+        'name': '所属分组',
+        'key': 'group',
+        'required': false,
+        'type': 0,
+        'value': []
       }
     ],
     'extend': [
@@ -93,6 +73,66 @@ Mock.mock(config.app.getParams, 'get', () => {
         'required': false,
         'type': 2,
         'value': ''
+      },
+      {
+        'name': 'card_no_s',
+        'key': 'card_no_s',
+        'required': true,
+        'type': 1,
+        'value': '',
+        'select': [
+          '1', '2', '3'
+        ]
+      },
+      {
+        'name': 'card_no_s',
+        'key': 'card_no_s',
+        'required': true,
+        'type': 1,
+        'value': '',
+        'select': [
+          '1', '2', '3'
+        ]
+      },
+      {
+        'name': 'card_no_s',
+        'key': 'card_no_s',
+        'required': true,
+        'type': 1,
+        'value': '',
+        'select': [
+          '1', '2', '3'
+        ]
+      },
+      {
+        'name': 'card_no_s',
+        'key': 'card_no_s',
+        'required': true,
+        'type': 1,
+        'value': '',
+        'select': [
+          '1', '2', '3'
+        ]
+      },
+      {
+        'name': 'card_no_s',
+        'key': 'card_no_s',
+        'required': true,
+        'type': 1,
+        'value': '',
+        'select': [
+          '1', '2', '3'
+        ]
+      },
+      {
+        'name': 'card_no_s',
+        'key': 'card_no_s',
+        'required': true,
+        'type': 1,
+        'value': '',
+        'select': [
+          '1', '2', '3'
+        ]
       },
       {
         'name': 'card_no_s',
