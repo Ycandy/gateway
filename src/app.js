@@ -26,7 +26,7 @@ router.beforeResolve((to, from, next) => {
 
 Vue.prototype.$loading = Loading.service
 Vue.prototype.$message = Message
-Vue.prototype.$ELEMENT = { size: 'mini' }
+// Vue.prototype.$ELEMENT = { size: 'medium' }
 Vue.use(Input)
 Vue.use(Button)
 Vue.use(Select)

@@ -155,7 +155,7 @@ export default {
       position relative
       box-sizing border-box
       margin-top 12px
-      padding 35px 156px 0
+      padding 35px 20% 0
       width 100%
       height 292px
       background #fff
