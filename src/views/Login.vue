@@ -1,8 +1,7 @@
 <template lang="pug">
 .login
-  .board
-    img.logo(width='175' height='38' src='public/image/gapper.png')
-    .types
+  .board(:style='{"height" : baseXp * 42 + "px", "width" : baseXp * 80 + "px"}')
+    .types(:style='{"height" : baseXp * 20 + "px", "width" : baseXp * 80 + "px"}')
       .account.type(:class='{ "active": active === "account" }'
         @click='active = "account"')
         .icon-png
@@ -21,6 +20,7 @@
       //-   .icon-png
       //-   span QQ
     form.form(v-if='active === "account"'
+      :style='{"height" : baseXp * 39 + "px", "width" : baseXp * 80 + "px"}'
       ref='form'
       method='post'
       :action='$config.app.login')
@@ -47,8 +47,9 @@
           name='password'
           placeholder="密码")
           img(slot="prepend" width='18' height='18' src='public/image/password.png')
-        .sign(@click='goSign') 注册
+      .tip-btn
         .reset-password(@click='goReset') 忘记密码
+        .sign(@click='goSign') 注册
       el-button.login-button(type="primary" @click='login') 登&nbsp;&nbsp;录
   .idea Research Gets Easier
 </template>
@@ -61,10 +62,12 @@ export default {
       form: {
         username: '',
         password: ''
-      }
+      },
+      baseXp: ''
     }
   },
   mounted () {
+    this.baseXp = document.body.clientHeight / 1080 * 10
   },
   methods: {
     goSign () {
@@ -87,8 +90,17 @@ export default {
   height 100%
   text-align center
   .board
-    margin 0 auto
-    width 600px
+    position absolute
+    top 0
+    right 0
+    left 0
+    bottom 0
+    margin auto
+    min-width 800px
+    min-height 608px
+    display flex
+    flex-direction column
+    justify-content space-between
     .logo
       margin 102px auto 38px
     .types
@@ -97,8 +109,8 @@ export default {
       display flex
       justify-content space-around
       align-items center
-      width 100%
-      height 150px
+      min-width 800px
+      min-height 200px
       background #fff
       .type
         cursor pointer
@@ -154,14 +166,19 @@ export default {
     .form
       position relative
       box-sizing border-box
-      margin-top 12px
-      padding 35px 20% 0
-      width 100%
-      height 292px
+      margin-top 18px
+      padding 0 20%
+      min-width 800px
+      min-height 390px
       background #fff
       text-align center
+      display flex
+      flex-direction column
+      justify-content center
+      align-items center
       .input-group
-        position relative
+        width 100%
+        // position relative
         .input.el-input
           margin-top 30px
           padding-right 8px
@@ -179,43 +196,33 @@ export default {
             border-radius 0
             font-size 12px
             color #6D7F89
+      .tip-btn
+        width 100%
+        height 50px
+        line-height 20px
+        .sign, .reset-password
+          cursor pointer
+          float right
+          height 16px
+          font-size 12px
+          color #6D7F89
+          &:hover
+            color #5DB8F1
         .sign
-          cursor pointer
-          position absolute
-          right 60px
-          bottom -24px
-          width 24px
-          height 16px
-          font-size 12px
-          color #6D7F89
-          &:hover
-            color #5DB8F1
-        .reset-password
-          cursor pointer
-          position absolute
-          right 0
-          bottom -24px
-          width 50px
-          height 16px
-          font-size 12px
-          color #6D7F89
-          &:hover
-            color #5DB8F1
+          margin-right 18px
       .login-button
         box-sizing border-box
-        margin-top 46px
         padding 0 15px
-        width 288px
-        height 38px
-        line-height 38px
+        width 100%
+        height 50px
+        line-height 50px
         font-size 14px
-        border-radius 19px
+        border-radius 25px
   .idea
-    margin-left -110px
+    margin 0 auto
     position absolute
-    left 50%
-    bottom 35px
-    width 220px
+    bottom 42px
+    width 100%
     font-size 16px
     color #C6C6C6
 </style>
