@@ -77,6 +77,27 @@
         @change='changeGroup')
       .tips(v-if='tips.lab') {{ tips.lab }}
       input(type='hidden' name='group' v-model='form.group')
+    .second-level
+      .input-title 有效时间
+      el-date-picker(
+        style='width: 45%;'
+        v-model='form.validStartDate'
+        name='validStartDate'
+        type="date"
+        placeholder="开始日期"
+        value-format='yyyy-MM-dd'
+        editable
+      )
+      span.date-separator 至
+      el-date-picker(
+        style='width: 45%;'
+        v-model='form.validEndDate'
+        name='validEndDate'
+        type="date"
+        placeholder="结束时间"
+        value-format='yyyy-MM-dd'
+        editable
+      )
     .button-line
       el-button(type='primary' @click='submit') 提交
 </template>
@@ -101,7 +122,9 @@ export default {
         type: '',
         card: '',
         organization: [],
-        group: ''
+        group: '',
+        validStartDate: '',
+        validEndDate: ''
       },
       tips: {
         email: '',
@@ -234,5 +257,4 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-
 </style>
