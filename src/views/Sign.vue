@@ -232,6 +232,19 @@ export default {
         tips.type = ''
       }
 
+      if (form.validStartDate && !form.validEndDate) {
+        tips.type = '请填写有效结束时间'
+        check = false
+      } else if (!form.validStartDate && form.validEndDate) {
+        tips.type = '请填写有效开始时间'
+        check = false
+      } else if (form.validStartDate && form.validEndDate && form.validStartDate > form.validEndDate) {
+        tips.type = '有效开始时间不能晚于有效结束时间'
+        check = false
+      } else {
+        tips.type = ''
+      }
+
       if (check) {
         this.$axios.post(this.$config.app.sign, form)
           .then(res => {

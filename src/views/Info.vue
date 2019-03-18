@@ -22,6 +22,12 @@
     .second-level
       .input-title 分组
       .input-title.last {{ info.group }}
+    .second-level
+      .input-title 有效时间
+      .input-title.last(style='display: flex;')
+        div {{ info.validStartDate || '-' }}
+        span.date-separator 至
+        div {{ info.validEndDate || '-' }}
     .bottom
 </template>
 
@@ -49,10 +55,10 @@ export default {
     // status_register 待审核
     // status_register_deny 被拒绝
     // status_normal 通过
-    if (data.status === 'status_normal') {
-      // 审核通过则跳转
-      this.$router.push({ name: 'complete', query: { genee_oauth: this.$route.query.genee_oauth } })
-    }
+    // if (data.status === 'status_normal') {
+    //   // 审核通过则跳转
+    //   this.$router.push({ name: 'complete', query: { genee_oauth: this.$route.query.genee_oauth } })
+    // }
     this.status = data.status
     this.info = data
     delete this.info.status
