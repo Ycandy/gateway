@@ -26,14 +26,15 @@
       .input-title.required 邮箱
       el-input(
         v-model='basicFields.email.value'
-        name='email')
+        name='email'
+        disabled)
     .tips(v-if='basicFields.email.tips')
       span {{ basicFields.email.tips }}
     .first-level
       span 个人信息
     .second-level
       .input-title.required 姓名
-      el-input(v-model='basicFields.name.value' name='name' placeholder='姓名')
+      el-input(v-model='basicFields.name.value' name='name' placeholder='姓名' disabled)
     .tips(v-if='basicFields.name.tips')
       span {{ basicFields.name.tips }}
     .second-level
@@ -42,9 +43,10 @@
     .tips(v-if='basicFields.phone.tips')
       span {{ basicFields.phone.tips }}
     .second-level
-      .input-title.required 人员类型
+      .input-title.required 用户类型
       el-select(v-model='basicFields.type.value'
-        placeholder='用户类型')
+        placeholder='用户类型'
+        disabled)
         el-option(
           value='student'
           label='学生'
@@ -80,6 +82,27 @@
         @change='changeGroup')
       input(type='hidden' name='group' v-model='basicFields.group.value')
     .tips(v-if='basicFields.group.tips') {{ basicFields.group.tips }}
+    .second-level
+      .input-title 有效时间
+      el-date-picker(
+        style='width: 45%;'
+        v-model='basicFields.validStartDate.value'
+        name='validStartDate'
+        type="date"
+        placeholder="开始日期"
+        value-format='yyyy-MM-dd'
+        disabled
+      )
+      span.date-separator 至
+      el-date-picker(
+        style='width: 45%;'
+        v-model='basicFields.validEndDate.value'
+        name='validEndDate'
+        type="date"
+        placeholder="结束时间"
+        value-format='yyyy-MM-dd'
+        disabled
+      )
     .first-level
       span 其他信息
     template(v-for='field in extendFields')
@@ -204,7 +227,7 @@ export default {
     },
     checkField (field) {
       // 验证必填
-      if (field.required && field.value === '') {
+      if (field.required && !field.value && field.value !== 0) {
         this.$set(field, 'tips', '请填写字段')
         return false
       }
