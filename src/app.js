@@ -3,7 +3,7 @@ import App from './App.vue'
 import { createStore } from './store'
 import { createRouter } from './router'
 import { sync } from 'vuex-router-sync'
-import { Input, Button, Select, Option, RadioGroup, Radio, Loading, Message, Cascader, DatePicker } from 'element-ui'
+import { Input, Button, Select, OptionGroup, Option, RadioGroup, Radio, Loading, Message, Cascader, DatePicker } from 'element-ui'
 import axios from 'axios'
 // import './mock'
 
@@ -30,6 +30,7 @@ Vue.prototype.$message = Message
 Vue.use(Input)
 Vue.use(Button)
 Vue.use(Select)
+Vue.use(OptionGroup)
 Vue.use(Option)
 Vue.use(RadioGroup)
 Vue.use(Radio)

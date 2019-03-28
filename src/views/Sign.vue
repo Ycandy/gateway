@@ -43,18 +43,13 @@
       el-select(v-model='form.type'
         name='type'
         placeholder='用户类型')
-        el-option(
-          value='student'
-          label='学生'
-        )
-        el-option(
-          value='teacher'
-          label='教师'
-        )
-        el-option(
-          value='other'
-          label='校外用户'
-        )
+        el-option-group(v-for='category in userTypes' :key='category.label'
+          :value='category.label'
+          :label='category.label')
+          el-option(v-for='option in category.options'
+            :key='option.value'
+            :label='option.label'
+            :value='option.value')
     .tips(v-if='tips.type')
       span {{ tips.type }}
     .second-level
@@ -138,7 +133,6 @@
 </template>
 
 <script>
-
 export default {
   data () {
     return {
@@ -168,6 +162,43 @@ export default {
         validStartDate: '',
         validEndDate: ''
       },
+      userTypes: [{
+        label: '学生',
+        options: [{
+          value: 'undergraduate',
+          label: '本科生'
+        }, {
+          value: 'postgraduate',
+          label: '硕士研究生'
+        }, {
+          value: 'doctoralCandidate',
+          label: '博士研究生'
+        }]
+      }, {
+        label: '教师',
+        options: [{
+          value: 'PI',
+          label: '课题负责人'
+        }, {
+          value: 'researchAssistant',
+          label: '科研助理'
+        }, {
+          value: 'researchConservator',
+          label: 'PI助理/实验室管理员'
+        }]
+      }, {
+        label: '其他',
+        options: [{
+          value: 'technician',
+          label: '技术员'
+        }, {
+          value: 'postdoctor',
+          label: '博士后'
+        }, {
+          value: 'other',
+          label: '其他'
+        }]
+      }],
       tips: {
         email: '',
         password: '',
@@ -182,10 +213,10 @@ export default {
   async mounted () {
     // researchGroup 课题组 room 房间
     let loading = this.$loading()
-    let organizationResult = await this.$axios.get(`${this.$config.app.getOrganization}?type=organization`)
-    this.organization = this.parseOrganization(organizationResult.data || [])
-    let buildingResult = await this.$axios.get(`${this.$config.app.getOrganization}?type=building`)
-    this.building = this.parseOrganization(buildingResult.data || [])
+    // let organizationResult = await this.$axios.get(`${this.$config.app.getOrganization}?type=organization`)
+    // this.organization = this.parseOrganization(organizationResult.data || [])
+    // let buildingResult = await this.$axios.get(`${this.$config.app.getOrganization}?type=building`)
+    // this.building = this.parseOrganization(buildingResult.data || [])
     loading.close()
   },
   methods: {
