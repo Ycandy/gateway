@@ -211,12 +211,11 @@ export default {
     }
   },
   async mounted () {
-    // researchGroup 课题组 room 房间
     let loading = this.$loading()
-    // let organizationResult = await this.$axios.get(`${this.$config.app.getOrganization}?type=organization`)
-    // this.organization = this.parseOrganization(organizationResult.data || [])
-    // let buildingResult = await this.$axios.get(`${this.$config.app.getOrganization}?type=building`)
-    // this.building = this.parseOrganization(buildingResult.data || [])
+    let organizationResult = await this.$axios.get(`${this.$config.app.getOrganization}?type=organization`)
+    this.organization = this.parseOrganization(organizationResult.data || [])
+    let buildingResult = await this.$axios.get(`${this.$config.app.getOrganization}?type=building`)
+    this.building = this.parseOrganization(buildingResult.data || [])
     loading.close()
   },
   methods: {
