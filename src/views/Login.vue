@@ -55,6 +55,8 @@
 </template>
 
 <script>
+import { Message } from 'element-ui'
+
 export default {
   data () {
     return {
@@ -68,6 +70,13 @@ export default {
   },
   mounted () {
     this.baseXp = document.body.clientHeight / 1080 * 10
+
+    if (this.$route.query.password_error) {
+      Message({
+        type: 'error',
+        message: '用户名或密码错误'
+      })
+    }
   },
   methods: {
     goSign () {
@@ -77,6 +86,13 @@ export default {
       this.$router.push({ name: 'reset' })
     },
     login () {
+      if (!this.form.username || !this.form.password) {
+        Message({
+          type: 'error',
+          message: '请输入用户名或密码'
+        })
+        return
+      }
       this.$refs.form.submit()
     }
   }

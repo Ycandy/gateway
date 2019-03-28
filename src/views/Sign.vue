@@ -63,10 +63,9 @@
     .tips(v-if='tips.card')
       span {{ tips.card }}
     .second-level
-      .input-title 所属分组
+      .input-title 组织机构
       el-cascader(
-        ref='cascader'
-        v-model='form.organization'
+        v-model='cascader.organization'
         name='organization'
         placeholder='所属分组'
         :options='organization'
@@ -74,9 +73,45 @@
         clearable
         filterable
         change-on-select
-        @change='changeGroup')
-      .tips(v-if='tips.lab') {{ tips.lab }}
-      input(type='hidden' name='group' v-model='form.group')
+        @change='changeOrganization')
+      input(type='hidden' name='organization' v-model='form.organization')
+    .second-level
+      .input-title 课题组
+      el-cascader(
+        v-model='cascader.researchGroup'
+        name='researchGroup'
+        placeholder='课题组'
+        :options='researchGroup'
+        :props='cascaderProps'
+        clearable
+        filterable
+        change-on-select)
+      input(type='hidden' name='researchGroup' v-model='form.researchGroup')
+    .second-level
+      .input-title 楼宇
+      el-cascader(
+        v-model='cascader.building'
+        name='building'
+        placeholder='楼宇'
+        :options='building'
+        :props='cascaderProps'
+        clearable
+        filterable
+        change-on-select
+        @change='changeBuilding')
+      input(type='hidden' name='building' v-model='form.building')
+    .second-level
+      .input-title 房间
+      el-cascader(
+        v-model='cascader.room'
+        name='room'
+        placeholder='房间'
+        :options='room'
+        :props='cascaderProps'
+        clearable
+        filterable
+        change-on-select)
+      input(type='hidden' name='room' v-model='form.room')
     .second-level
       .input-title 有效时间
       el-date-picker(
@@ -108,6 +143,15 @@ export default {
   data () {
     return {
       organization: [],
+      researchGroup: [],
+      building: [],
+      room: [],
+      cascader: {
+        organization: [],
+        researchGroup: [],
+        building: [],
+        room: []
+      },
       cascaderProps: {
         value: 'id',
         label: 'name',
@@ -121,8 +165,6 @@ export default {
         phone: '',
         type: '',
         card: '',
-        organization: [],
-        group: '',
         validStartDate: '',
         validEndDate: ''
       },
@@ -138,9 +180,12 @@ export default {
     }
   },
   async mounted () {
+    // researchGroup 课题组 room 房间
     let loading = this.$loading()
-    let result = await this.$axios.get(this.$config.app.getOrganization)
-    this.organization = this.parseOrganization(result.data)
+    let organizationResult = await this.$axios.get(`${this.$config.app.getOrganization}?type=organization`)
+    this.organization = this.parseOrganization(organizationResult.data || [])
+    let buildingResult = await this.$axios.get(`${this.$config.app.getOrganization}?type=building`)
+    this.building = this.parseOrganization(buildingResult.data || [])
     loading.close()
   },
   methods: {
@@ -163,10 +208,18 @@ export default {
         Reflect.set(parent[item.parent_id], item.id, item)
       })
 
-      let key = Object.values(parent.null)[0].id
-      return this.pushOrganizationChildren(key, parent)
+      let keys = Object.keys(parent).map(item => Number(item))
+      let minKey = Math.min(...keys)
+      return Object.values(parent[minKey]).map(item => {
+        return {
+          id: item.id,
+          name: item.name,
+          children: this.pushOrganizationChildren(item.id, parent)
+        }
+      })
     },
     pushOrganizationChildren (key, parent) {
+      if (!parent[key]) return
       let result = Object.values(parent[key])
       result.forEach(item => {
         if (Reflect.has(parent, item.id)) {
@@ -175,8 +228,23 @@ export default {
       })
       return result
     },
-    changeGroup (value) {
-      this.form.group = value[value.length - 1]
+    async changeOrganization (value) {
+      let loading = this.$loading()
+      this.cascader.researchGroup = []
+      let organization = value[value.length - 1]
+      let researchGroupResult =
+        await this.$axios.get(`${this.$config.app.getOrganization}?type=researchGroup&id=${organization}`)
+      this.researchGroup = researchGroupResult.data || []
+      loading.close()
+    },
+    async changeBuilding (value) {
+      let loading = this.$loading()
+      this.cascader.room = []
+      let building = value[value.length - 1]
+      let roomResult =
+        await this.$axios.get(`${this.$config.app.getOrganization}?type=room&id=${building}`)
+      this.room = roomResult.data || []
+      loading.close()
     },
     submit () {
       let check = true
@@ -244,6 +312,9 @@ export default {
       } else {
         tips.type = ''
       }
+
+      let group = Object.values(this.cascader).filter(item => item.length > 0).map(item => item[item.length - 1])
+      form.group = group
 
       if (check) {
         this.$axios.post(this.$config.app.sign, form)

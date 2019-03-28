@@ -111,13 +111,15 @@
         el-input(v-if='field.type === 0'
           v-model='field.value'
           :name='field.key')
-        el-select(v-else-if='field.type === 1'
-          v-model='field.value'
-          :name='field.key')
-          el-option(v-for='option in field.select'
-            :key='option'
-            :label='option'
-            :value='option')
+        template(v-else-if='field.type === 1')
+          el-select(
+            v-model='field.value'
+            :name='field.key')
+            el-option(v-for='option in field.select'
+              :key='option'
+              :label='option'
+              :value='option')
+          input(type='hidden' v-model='field.value' :name='field.key')
         el-input(v-else-if='field.type === 2'
           type='number'
           v-model='field.value'
