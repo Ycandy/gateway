@@ -156,9 +156,9 @@ export default {
         if (item.value) {
           let cur = organizationResult.data.find(group => group.id === item.value)
           path = [cur.id]
-          while (cur.parent_id) {
+          while (cur && cur.parent_id) {
             cur = organizationResult.data.find(group => group.id === cur.parent_id)
-            path.splice(0, 0, cur.id)
+            if (cur) path.splice(0, 0, cur.id)
           }
         }
         item.path = path
@@ -180,10 +180,18 @@ export default {
         Reflect.set(parent[item.parent_id], item.id, item)
       })
 
-      let key = Object.values(parent.null)[0].id
-      return this.pushOrganizationChildren(key, parent)
+      let keys = Object.keys(parent).map(item => Number(item))
+      let minKey = Math.min(...keys)
+      return Object.values(parent[minKey]).map(item => {
+        return {
+          id: item.id,
+          name: item.name,
+          children: this.pushOrganizationChildren(item.id, parent)
+        }
+      })
     },
     pushOrganizationChildren (key, parent) {
+      if (!parent[key]) return
       let result = Object.values(parent[key])
       result.forEach(item => {
         if (Reflect.has(parent, item.id)) {

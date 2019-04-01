@@ -6,12 +6,12 @@ module.exports = {
     port: 8001,
   },
   app: {
-    login: 'http://gateway.cn/gateway/auth',
-    getParams: 'http://gateway.cn/gateway/user/field',
-    sign: 'http://gateway.cn/gateway/user/regist',
-    info: 'http://gateway.cn/gateway/user/info',
-    complete: 'http://gateway.cn/gateway/user/improve-info',
-    redirect: 'http://gateway.cn/gateway/judge-login',
-    getOrganization: 'http://gateway.cn/gateway/group/list'
+    login: 'http://gateway.cn/auth',
+    getParams: 'http://gateway.cn/user/field',
+    sign: 'http://gateway.cn/user/regist',
+    info: 'http://gateway.cn/user/info',
+    complete: 'http://gateway.cn/user/improve-info',
+    redirect: 'http://gateway.cn/judge-login',
+    getOrganization: 'http://gateway.cn/group/list'
   }
 }
