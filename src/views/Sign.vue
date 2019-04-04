@@ -40,18 +40,9 @@
       span {{ tips.phone }}
     .second-level
       .input-title.required 人员类型
-      el-select(v-model='form.type'
-        name='type'
-        placeholder='用户类型')
-        el-option-group(v-for='category in userTypes' :key='category.label'
-          :value='category.label'
-          :label='category.label')
-          el-option(v-for='option in category.options'
-            :key='option.value'
-            :label='option.label'
-            :value='option.value')
-    .tips(v-if='tips.type')
-      span {{ tips.type }}
+      el-cascader(v-model='userTypes' placeholder="选择任意级分组" :options="types" filterable change-on-select style="width: 100%")
+    .tips(v-if="tips.userType")
+      span {{ tips.userType}}
     .second-level
       .input-title 学工号
       el-input(v-model='form.card' name='card' placeholder='学工号')
@@ -162,49 +153,15 @@ export default {
         validStartDate: '',
         validEndDate: ''
       },
-      userTypes: [{
-        label: '学生',
-        options: [{
-          value: 'undergraduate',
-          label: '本科生'
-        }, {
-          value: 'postgraduate',
-          label: '硕士研究生'
-        }, {
-          value: 'doctoralCandidate',
-          label: '博士研究生'
-        }]
-      }, {
-        label: '教师',
-        options: [{
-          value: 'PI',
-          label: '课题负责人'
-        }, {
-          value: 'researchAssistant',
-          label: '科研助理'
-        }, {
-          value: 'researchConservator',
-          label: 'PI助理/实验室管理员'
-        }]
-      }, {
-        label: '其他',
-        options: [{
-          value: 'technician',
-          label: '技术员'
-        }, {
-          value: 'postdoctor',
-          label: '博士后'
-        }, {
-          value: 'other',
-          label: '其他'
-        }]
-      }],
+      userTypes: [],
+      types: [],
       tips: {
         email: '',
         password: '',
         repassword: '',
         name: '',
         phone: '',
+        userType: '',
         type: '',
         card: ''
       }
@@ -217,6 +174,7 @@ export default {
     let buildingResult = await this.$axios.get(`${this.$config.app.getOrganization}?type=building`)
     this.building = this.parseOrganization(buildingResult.data || [])
     loading.close()
+    this.fetcnUserTypes()
   },
   methods: {
     async handleItemChange (path) {
@@ -276,12 +234,38 @@ export default {
       this.room = roomResult.data || []
       loading.close()
     },
+    async fetcnUserTypes () {
+      let params = { 'jsonrpc': '2.0', 'method': 'user/type/list', 'params': [], 'id': '1' }
+      let result = await this.$axios.post(`${this.$config.app.getUserTypes}`, params)
+      let types = {}
+      let arr = []
+      result.data.result.map(item => {
+        types[item.key] = item
+      })
+      Object.keys(types).map(key => {
+        let parentKey = types[key].parent_key
+        types[key].value = types[key].key
+        types[key].label = types[key].name
+        if (!parentKey) {
+          arr.push(types[key])
+        } else {
+          if (types[key].parent_key) {
+            if (!types[parentKey].children) {
+              types[parentKey].children = []
+              types[parentKey].children.push(types[key])
+            } else {
+              types[parentKey].children.push(types[key])
+            }
+          }
+        }
+      })
+      this.types = arr
+    },
     submit () {
       let check = true
 
       let form = this.form
       let tips = this.tips
-
       if (!form.email) {
         tips.email = '请输入邮箱'
         check = false
@@ -323,11 +307,11 @@ export default {
         tips.phone = ''
       }
 
-      if (!form.type) {
-        tips.type = '请选择用户类型'
+      if (this.userTypes.length <= 0) {
+        tips.userType = '请选择用户类型'
         check = false
       } else {
-        tips.type = ''
+        tips.userType = ''
       }
 
       if (form.validStartDate && !form.validEndDate) {
@@ -342,7 +326,7 @@ export default {
       } else {
         tips.type = ''
       }
-
+      form.type = this.userTypes[this.userTypes.length - 1]
       let group = Object.values(this.cascader).filter(item => item.length > 0).map(item => item[item.length - 1])
       form.group = group
 

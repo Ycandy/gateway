@@ -12,6 +12,7 @@ module.exports = {
     info: 'http://gateway.cn/user/info',
     complete: 'http://gateway.cn/user/improve-info',
     redirect: 'http://gateway.cn/judge-login',
-    getOrganization: 'http://gateway.cn/group/list'
+    getOrganization: 'http://gateway.cn/group/list',
+    getUserTypes: 'http://demo.gapper.in/gateway/api'
   }
 }

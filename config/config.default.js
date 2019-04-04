@@ -12,6 +12,7 @@ module.exports = {
     info: 'http://demo.gapper.in/gateway/user/info',
     complete: 'http://demo.gapper.in/gateway/user/improve-info',
     redirect: 'http://demo.gapper.in/gateway/judge-login',
-    getOrganization: 'http://demo.gapper.in/gateway/group/list'
+    getOrganization: 'http://demo.gapper.in/gateway/group/list',
+    getUserTypes: 'http://demo.gapper.in/gateway/api'
   }
 }

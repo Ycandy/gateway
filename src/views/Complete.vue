@@ -44,22 +44,7 @@
       span {{ basicFields.phone.tips }}
     .second-level
       .input-title.required 用户类型
-      el-select(v-model='basicFields.type.value'
-        placeholder='用户类型'
-        disabled)
-        el-option(
-          value='student'
-          label='学生'
-        )
-        el-option(
-          value='teacher'
-          label='教师'
-        )
-        el-option(
-          value='other'
-          label='校外用户'
-        )
-      input(type='hidden' v-model='basicFields.type.value' name='type')
+      el-input(v-model='basicFields.type.value.name' name='type' placeholder='用户类型' disabled)
     .tips(v-if='basicFields.type.tips')
       span {{ basicFields.type.tips }}
     .second-level
@@ -68,20 +53,55 @@
     .tips(v-if='basicFields.ref_no.tips')
       span {{ basicFields.ref_no.tips }}
     .second-level
-      .input-title 所属分组
+      .input-title 组织机构
       el-cascader(
-        ref='cascader'
-        v-model='basicFields.group.path'
-        name='group'
-        placeholder='所属分组'
+        v-model='cascader.organization'
+        name='organization'
+        placeholder='组织机构'
         :options='organization'
         :props='cascaderProps'
         clearable
         filterable
         change-on-select
-        @change='changeGroup')
-      input(type='hidden' name='group' v-model='basicFields.group.value')
-    .tips(v-if='basicFields.group.tips') {{ basicFields.group.tips }}
+        @change='changeOrganization')
+      input(type='hidden' name='organization' v-model='form.organization')      
+    .second-level
+      .input-title 课题组
+      el-cascader(
+        v-model='cascader.researchGroup'
+        name='researchGroup'
+        placeholder='课题组'
+        :options='researchGroup'
+        :props='cascaderProps'
+        clearable
+        filterable
+        change-on-select)
+      input(type='hidden' name='researchGroup' v-model='form.researchGroup')
+    .second-level
+      .input-title 楼宇
+      el-cascader(
+        v-model='cascader.building'
+        name='building'
+        placeholder='楼宇'
+        :options='building'
+        :props='cascaderProps'
+        clearable
+        filterable
+        change-on-select
+        @change='changeBuilding')
+      input(type='hidden' name='building' v-model='form.building')    
+    .second-level
+      .input-title 房间
+      el-cascader(
+        v-model='cascader.room'
+        name='room'
+        placeholder='房间'
+        :options='room'
+        :props='cascaderProps'
+        clearable
+        filterable
+        change-on-select)
+      input(type='hidden' name='room' v-model='form.room')    
     .second-level
       .input-title 有效时间
       el-date-picker(
@@ -141,17 +161,37 @@ export default {
         label: 'name',
         children: 'children'
       },
+      form: {
+        organization: '',
+        researchGroup: '',
+        building: '',
+        room: ''
+      },
+      organization: [],
+      researchGroup: [],
+      building: [],
+      room: [],
+      cascader: {
+        organization: [],
+        researchGroup: [],
+        building: [],
+        room: []
+      },
+      types: [],
+      userTypes: [],
       load: false
     }
   },
   async mounted () {
     let loading = this.$loading()
-    let organizationResult = await this.$axios.get(this.$config.app.getOrganization)
-    this.organization = this.parseOrganization(organizationResult.data)
+    let organizationResult = await this.$axios.get(`${this.$config.app.getOrganization}?type=organization`)
+    this.organization = this.parseOrganization(organizationResult.data || [])
+    let buildingResult = await this.$axios.get(`${this.$config.app.getOrganization}?type=building`)
+    this.building = this.parseOrganization(buildingResult.data || [])
     let paramsResult = await this.$axios.get(this.$config.app.getParams)
     let basicFields = {}
     paramsResult.data.basic.forEach(item => {
-      if (item.key === 'group') {
+      if (['organization'].includes(item.key)) {
         let path = []
         if (item.value) {
           let cur = organizationResult.data.find(group => group.id === item.value)
@@ -166,6 +206,7 @@ export default {
       Reflect.set(basicFields, item.key, item)
     })
     this.basicFields = basicFields
+    this.userTypes = this.basicFields.type.key.split('/')
     this.extendFields = paramsResult.data.extend
     this.load = true
     loading.close()
@@ -216,6 +257,24 @@ export default {
     },
     changeGroup (value) {
       this.basicFields.group.value = value[value.length - 1]
+    },
+    async changeOrganization (value) {
+      let loading = this.$loading()
+      this.cascader.researchGroup = []
+      let organization = value[value.length - 1]
+      let researchGroupResult =
+        await this.$axios.get(`${this.$config.app.getOrganization}?type=researchGroup&id=${organization}`)
+      this.researchGroup = researchGroupResult.data || []
+      loading.close()
+    },
+    async changeBuilding (value) {
+      let loading = this.$loading()
+      this.cascader.room = []
+      let building = value[value.length - 1]
+      let roomResult =
+        await this.$axios.get(`${this.$config.app.getOrganization}?type=room&id=${building}`)
+      this.room = roomResult.data || []
+      loading.close()
     },
     submit () {
       let check = true

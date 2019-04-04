@@ -15,7 +15,7 @@
       .input-title.last {{ info.phone }}
     .second-level
       .input-title 人员类型
-      .input-title.last {{ type[info.type] }}
+      .input-title.last {{ info.type.name }}
     .second-level
       .input-title 学工号
       .input-title.last {{ info.ref_no }}
@@ -36,11 +36,6 @@ export default {
   data () {
     return {
       info: {},
-      type: {
-        'student': '学生',
-        'teacher': '教师',
-        'other': '校外用户'
-      },
       status: '',
       message: {
         'status_register': '等待审核,  若管理员超过 1 天还未激活您的账号,  请及时联系管理员为您激活账号',
