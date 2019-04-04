@@ -184,24 +184,34 @@ export default {
   },
   async mounted () {
     let loading = this.$loading()
+    let result = {}
     let organizationResult = await this.$axios.get(`${this.$config.app.getOrganization}?type=organization`)
+    Reflect.set(result, 'organization', organizationResult)
     this.organization = this.parseOrganization(organizationResult.data || [])
     let buildingResult = await this.$axios.get(`${this.$config.app.getOrganization}?type=building`)
+    Reflect.set(result, 'building', buildingResult)
     this.building = this.parseOrganization(buildingResult.data || [])
     let paramsResult = await this.$axios.get(this.$config.app.getParams)
     let basicFields = {}
     paramsResult.data.basic.forEach(item => {
-      if (['organization'].includes(item.key)) {
+      if (['organization', 'building'].includes(item.key)) {
         let path = []
         if (item.value) {
-          let cur = organizationResult.data.find(group => group.id === item.value)
-          path = [cur.id]
-          while (cur && cur.parent_id) {
-            cur = organizationResult.data.find(group => group.id === cur.parent_id)
-            if (cur) path.splice(0, 0, cur.id)
+          let cur = result[item.key].data.find(group => group.id === item.value)
+          if (cur) {
+            path = [cur.id]
+            while (cur && cur.parent_id) {
+              cur = result[item.key].data.find(group => group.id === cur.parent_id)
+              if (cur) path.splice(0, 0, cur.id)
+            }
           }
         }
         item.path = path
+        Reflect.set(this.cascader, item.key, path)
+        if (item.key === 'organization') this.changeOrganization(path)
+        if (item.key === 'building') this.changeBuilding(path)
+      } else if (['researchGroup', 'room'].includes(item.key)) {
+        if (item.value) Reflect.set(this.cascader, item.key, [item.value])
       }
       Reflect.set(basicFields, item.key, item)
     })
