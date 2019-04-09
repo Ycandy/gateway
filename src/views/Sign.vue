@@ -170,9 +170,9 @@ export default {
   async mounted () {
     let loading = this.$loading()
     let organizationResult = await this.$axios.get(`${this.$config.app.getOrganization}?type=organization`)
-    this.organization = this.parseOrganization(organizationResult.data || [])
+    this.organization = this.parseCascader(organizationResult.data || [])
     let buildingResult = await this.$axios.get(`${this.$config.app.getOrganization}?type=building`)
-    this.building = this.parseOrganization(buildingResult.data || [])
+    this.building = this.parseCascader(buildingResult.data || [])
     loading.close()
     this.fetcnUserTypes()
   },
@@ -187,35 +187,57 @@ export default {
         this.$set(item, 'children', this.parseOrganization(result.data))
       }
     },
-    parseOrganization (organization) {
-      let parent = {}
-      organization.forEach(item => {
-        if (!Reflect.has(parent, item.parent_id)) {
-          Reflect.set(parent, item.parent_id, {})
+    parseCascader (building) {
+      let parentKeys = []
+      let listObj = {}
+      building.forEach(item => {
+        parentKeys.indexOf(item.parent_id) >= 0 || parentKeys.push(item.parent_id)
+        Reflect.set(listObj, item.id, Object.assign({ children: [] }, item))
+      })
+      let arr = []
+      Object.keys(listObj).map(key => {
+        let item = listObj[key]
+        if (parentKeys.indexOf(item.id) < 0) {
+          delete item.children
         }
-        Reflect.set(parent[item.parent_id], item.id, item)
+        if (Object.keys(listObj).indexOf(item.parent_id) >= 0) {
+          listObj[item.parent_id].children.push(item)
+        } else {
+          arr.push(item)
+        }
       })
 
-      let keys = Object.keys(parent).map(item => Number(item))
-      let minKey = Math.min(...keys)
-      return Object.values(parent[minKey]).map(item => {
-        return {
-          id: item.id,
-          name: item.name,
-          children: this.pushOrganizationChildren(item.id, parent)
-        }
-      })
+      return arr
     },
-    pushOrganizationChildren (key, parent) {
-      if (!parent[key]) return
-      let result = Object.values(parent[key])
-      result.forEach(item => {
-        if (Reflect.has(parent, item.id)) {
-          item.children = this.pushOrganizationChildren(item.id, parent)
-        }
-      })
-      return result
-    },
+    // parseOrganization (organization) {
+    //   let parent = {}
+    //   organization.forEach(item => {
+    //     if (!Reflect.has(parent, item.parent_id)) {
+    //       Reflect.set(parent, item.parent_id, {})
+    //     }
+    //     Reflect.set(parent[item.parent_id], item.id, item)
+    //   })
+
+    //   let keys = Object.keys(parent).map(item => Number(item))
+    //   let minKey = Math.min(...keys)
+    //   return Object.values(parent[minKey]).map(item => {
+    //     return {
+    //       id: item.id,
+    //       name: item.name,
+    //       children: this.pushOrganizationChildren(item.id, parent)
+    //     }
+    //   })
+    // },
+    // pushOrganizationChildren (key, parent) {
+    //   if (!parent[key]) return
+    //   let result = Object.values(parent[key])
+    //   result.forEach(item => {
+    //     if (Reflect.has(parent, item.id)) {
+    //       item.children = this.pushOrganizationChildren(item.id, parent)
+    //     }
+    //   })
+    //   return result
+    // },
     async changeOrganization (value) {
       let loading = this.$loading()
       this.cascader.researchGroup = []
