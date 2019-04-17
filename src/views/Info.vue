@@ -35,7 +35,9 @@
 export default {
   data () {
     return {
-      info: {},
+      info: {
+        type: ''
+      },
       status: '',
       message: {
         'status_register': '等待审核,  若管理员超过 1 天还未激活您的账号,  请及时联系管理员为您激活账号',
@@ -50,10 +52,10 @@ export default {
     // status_register 待审核
     // status_register_deny 被拒绝
     // status_normal 通过
-    // if (data.status === 'status_normal') {
-    //   // 审核通过则跳转
-    //   this.$router.push({ name: 'complete', query: { genee_oauth: this.$route.query.genee_oauth } })
-    // }
+    if (data.status === 'status_normal') {
+      // 审核通过则跳转
+      this.$router.push({ name: 'complete', query: { genee_oauth: this.$route.query.genee_oauth } })
+    }
     this.status = data.status
     this.info = data
     delete this.info.status
