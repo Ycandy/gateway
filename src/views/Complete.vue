@@ -187,10 +187,10 @@ export default {
     let result = {}
     let organizationResult = await this.$axios.get(`${this.$config.app.getOrganization}?type=organization`)
     Reflect.set(result, 'organization', organizationResult)
-    this.organization = this.parseOrganization(organizationResult.data || [])
+    this.organization = this.parseCascader(organizationResult.data || [])
     let buildingResult = await this.$axios.get(`${this.$config.app.getOrganization}?type=building`)
     Reflect.set(result, 'building', buildingResult)
-    this.building = this.parseOrganization(buildingResult.data || [])
+    this.building = this.parseCascader(buildingResult.data || [])
     let paramsResult = await this.$axios.get(this.$config.app.getParams)
     let basicFields = {}
     paramsResult.data.basic.forEach(item => {
@@ -222,35 +222,57 @@ export default {
     loading.close()
   },
   methods: {
-    parseOrganization (organization) {
-      let parent = {}
-      organization.forEach(item => {
-        if (!Reflect.has(parent, item.parent_id)) {
-          Reflect.set(parent, item.parent_id, {})
+    // parseOrganization (organization) {
+    //   let parent = {}
+    //   organization.forEach(item => {
+    //     if (!Reflect.has(parent, item.parent_id)) {
+    //       Reflect.set(parent, item.parent_id, {})
+    //     }
+    //     Reflect.set(parent[item.parent_id], item.id, item)
+    //   })
+
+    //   let keys = Object.keys(parent).map(item => Number(item))
+    //   let minKey = Math.min(...keys)
+    //   return Object.values(parent[minKey]).map(item => {
+    //     return {
+    //       id: item.id,
+    //       name: item.name,
+    //       children: this.pushOrganizationChildren(item.id, parent)
+    //     }
+    //   })
+    // },
+    parseCascader (building) {
+      let parentKeys = []
+      let listObj = {}
+      building.forEach(item => {
+        parentKeys.indexOf(item.parent_id) >= 0 || parentKeys.push(item.parent_id)
+        Reflect.set(listObj, item.id, Object.assign({ children: [] }, item))
+      })
+      let arr = []
+      Object.keys(listObj).map(key => {
+        let item = listObj[key]
+        if (parentKeys.indexOf(item.id) < 0) {
+          delete item.children
         }
-        Reflect.set(parent[item.parent_id], item.id, item)
+        if (Object.keys(listObj).indexOf(item.parent_id) >= 0) {
+          listObj[item.parent_id].children.push(item)
+        } else {
+          arr.push(item)
+        }
       })
 
-      let keys = Object.keys(parent).map(item => Number(item))
-      let minKey = Math.min(...keys)
-      return Object.values(parent[minKey]).map(item => {
-        return {
-          id: item.id,
-          name: item.name,
-          children: this.pushOrganizationChildren(item.id, parent)
-        }
-      })
+      return arr
     },
-    pushOrganizationChildren (key, parent) {
-      if (!parent[key]) return
-      let result = Object.values(parent[key])
-      result.forEach(item => {
-        if (Reflect.has(parent, item.id)) {
-          item.children = this.pushOrganizationChildren(item.id, parent)
-        }
-      })
-      return result
-    },
+    // pushOrganizationChildren (key, parent) {
+    //   if (!parent[key]) return
+    //   let result = Object.values(parent[key])
+    //   result.forEach(item => {
+    //     if (Reflect.has(parent, item.id)) {
+    //       item.children = this.pushOrganizationChildren(item.id, parent)
+    //     }
+    //   })
+    //   return result
+    // },
     closeMessage () {
       this.closeMessageAnimate()
     },
