@@ -54,7 +54,8 @@ export default {
     // status_normal 通过
     if (data.status === 'status_normal') {
       // 审核通过则跳转
-      this.$router.push({ name: 'complete', query: { genee_oauth: this.$route.query.genee_oauth } })
+      window.location.href = document.referrer
+      // this.$router.push({ name: 'complete', query: { genee_oauth: this.$route.query.genee_oauth } })
     }
     this.status = data.status
     this.info = data
