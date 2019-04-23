@@ -9,7 +9,7 @@
     v-if='load'
     ref='form'
     method='post'
-    :action='$config.app.complete')
+    :action='completeAction')
     .input-group(v-show='false')
       input(
         name='redirect'
@@ -154,6 +154,7 @@
 export default {
   data () {
     return {
+      completeAction: `${this.gatewayServer}/user/improve-info`,
       basicFields: {},
       extendFields: [],
       cascaderProps: {

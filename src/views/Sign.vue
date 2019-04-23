@@ -60,7 +60,6 @@
         filterable
         change-on-select
         @change='changeOrganization')
-      input(type='hidden' name='organization' v-model='form.organization')
     .second-level
       .input-title 课题组
       el-cascader(
@@ -71,8 +70,9 @@
         :props='cascaderProps'
         clearable
         filterable
-        change-on-select)
-      input(type='hidden' name='researchGroup' v-model='form.researchGroup')
+        change-on-select
+        :disabled='cascader.organization.length === 0'
+        @click.native='clickResearchGroup')
     .second-level
       .input-title 楼宇
       el-cascader(
@@ -85,7 +85,6 @@
         filterable
         change-on-select
         @change='changeBuilding')
-      input(type='hidden' name='building' v-model='form.building')
     .second-level
       .input-title 房间
       el-cascader(
@@ -96,8 +95,8 @@
         :props='cascaderProps'
         clearable
         filterable
-        change-on-select)
-      input(type='hidden' name='room' v-model='form.room')
+        change-on-select
+        :disabled='cascader.building.length === 0')
     .second-level
       .input-title 有效时间
       el-date-picker(
@@ -124,19 +123,44 @@
 </template>
 
 <script>
+import { DatePicker, Input, Cascader, Button } from 'gapper-element-ui'
+
 export default {
+  components: {
+    [DatePicker.name]: DatePicker,
+    [Input.name]: Input,
+    [Cascader.name]: Cascader,
+    [Button.name]: Button
+  },
+  async asyncData ({ vue, component }) {
+    let loading = vue.$loading()
+    let organizationResult = await vue.$axios.get(`${vue.$gatewayServer}/group/list?type=organization`)
+    let organization = component.methods.parseCascader(organizationResult.data || [])
+    let buildingResult = await vue.$axios.get(`${vue.$gatewayServer}/group/list?type=building`)
+    let building = component.methods.parseCascader(buildingResult.data || [])
+    let userTypeResult = await vue.$axios.post(`${vue.$gatewayServer}/api`, { 'jsonrpc': '2.0', 'method': 'user/type/list', 'params': [], 'id': '1' })
+    let userTypes = component.methods.fetcnUserTypes(userTypeResult.data || [])
+    loading.close()
+    return {
+      organization,
+      building,
+      types: userTypes
+    }
+  },
   data () {
     return {
       organization: [],
       researchGroup: [],
-      building: [],
+      build: [],
       room: [],
+      types: [],
       cascader: {
         organization: [],
         researchGroup: [],
         building: [],
         room: []
       },
+      userTypes: [],
       cascaderProps: {
         value: 'id',
         label: 'name',
@@ -150,11 +174,13 @@ export default {
         phone: '',
         type: '',
         card: '',
+        organization: '',
+        researchGroup: '',
+        building: '',
+        room: '',
         validStartDate: '',
         validEndDate: ''
       },
-      userTypes: [],
-      types: [],
       tips: {
         email: '',
         password: '',
@@ -167,26 +193,7 @@ export default {
       }
     }
   },
-  async mounted () {
-    let loading = this.$loading()
-    let organizationResult = await this.$axios.get(`${this.$config.app.getOrganization}?type=organization`)
-    this.organization = this.parseCascader(organizationResult.data || [])
-    let buildingResult = await this.$axios.get(`${this.$config.app.getOrganization}?type=building`)
-    this.building = this.parseCascader(buildingResult.data || [])
-    loading.close()
-    this.fetcnUserTypes()
-  },
   methods: {
-    async handleItemChange (path) {
-      let item = { children: this.organization }
-      path.forEach(index => {
-        item = item.children[index]
-      })
-      if (item.children.length === 0) {
-        let result = await this.$axios.get(`${this.$config.app.getOrganization}/${item.id}`)
-        this.$set(item, 'children', this.parseOrganization(result.data))
-      }
-    },
     parseCascader (building) {
       let parentKeys = []
       let listObj = {}
@@ -209,59 +216,35 @@ export default {
 
       return arr
     },
-    // parseOrganization (organization) {
-    //   let parent = {}
-    //   organization.forEach(item => {
-    //     if (!Reflect.has(parent, item.parent_id)) {
-    //       Reflect.set(parent, item.parent_id, {})
-    //     }
-    //     Reflect.set(parent[item.parent_id], item.id, item)
-    //   })
-
-    //   let keys = Object.keys(parent).map(item => Number(item))
-    //   let minKey = Math.min(...keys)
-    //   return Object.values(parent[minKey]).map(item => {
-    //     return {
-    //       id: item.id,
-    //       name: item.name,
-    //       children: this.pushOrganizationChildren(item.id, parent)
-    //     }
-    //   })
-    // },
-    // pushOrganizationChildren (key, parent) {
-    //   if (!parent[key]) return
-    //   let result = Object.values(parent[key])
-    //   result.forEach(item => {
-    //     if (Reflect.has(parent, item.id)) {
-    //       item.children = this.pushOrganizationChildren(item.id, parent)
-    //     }
-    //   })
-    //   return result
-    // },
     async changeOrganization (value) {
       let loading = this.$loading()
       this.cascader.researchGroup = []
       let organization = value[value.length - 1]
-      let researchGroupResult =
-        await this.$axios.get(`${this.$config.app.getOrganization}?type=researchGroup&id=${organization}`)
+      let researchGroupResult = await this.$axios.get(`${this.$$gatewayServer}/group/list?type=researchGroup&id=${organization}`)
       this.researchGroup = researchGroupResult.data || []
       loading.close()
+    },
+    clickResearchGroup () {
+      console.log(this.cascader.organization.length === 0)
+      if (this.cascader.organization.length === 0) {
+        this.$message({
+          type: 'warning',
+          message: '请先选择组织机构'
+        })
+      }
     },
     async changeBuilding (value) {
       let loading = this.$loading()
       this.cascader.room = []
       let building = value[value.length - 1]
-      let roomResult =
-        await this.$axios.get(`${this.$config.app.getOrganization}?type=room&id=${building}`)
+      let roomResult = await this.$axios.get(`${this.$gatewayServer}/group/list?type=room&id=${building}`)
       this.room = roomResult.data || []
       loading.close()
     },
-    async fetcnUserTypes () {
-      let params = { 'jsonrpc': '2.0', 'method': 'user/type/list', 'params': [], 'id': '1' }
-      let result = await this.$axios.post(`${this.$config.app.getUserTypes}`, params)
+    async fetcnUserTypes (data) {
       let types = {}
       let arr = []
-      result.data.result.map(item => {
+      data.result.map(item => {
         types[item.key] = item
       })
       Object.keys(types).map(key => {
@@ -281,7 +264,7 @@ export default {
           }
         }
       })
-      this.types = arr
+      return arr
     },
     submit () {
       let check = true
@@ -384,4 +367,6 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.info
+  overflow: auto;
 </style>

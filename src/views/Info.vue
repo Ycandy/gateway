@@ -45,17 +45,17 @@ export default {
       }
     }
   },
-  async mounted () {
-    let loading = this.$loading()
-    let { data } = await this.$axios.get(this.$config.app.info)
+  async asyncData ({ vue, component }) {
+    let loading = vue.$loading()
+    let { data } = await vue.$axios.get(`${vue.$gatewayServer}/user/info`)
     // 返回结果的status有三个值
     // status_register 待审核
     // status_register_deny 被拒绝
     // status_normal 通过
     if (data.status === 'status_normal') {
       // 审核通过则跳转
-      window.location.href = document.referrer
-      // this.$router.push({ name: 'complete', query: { genee_oauth: this.$route.query.genee_oauth } })
+      // window.location.href = document.referrer
+      this.$router.push({ name: 'complete', query: { genee_oauth: this.$route.query.genee_oauth } })
     }
     this.status = data.status
     this.info = data
