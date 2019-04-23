@@ -33,18 +33,6 @@
 
 <script>
 export default {
-  data () {
-    return {
-      info: {
-        type: ''
-      },
-      status: '',
-      message: {
-        'status_register': '等待审核,  若管理员超过 1 天还未激活您的账号,  请及时联系管理员为您激活账号',
-        'status_register_deny': '很抱歉, 您的审核已被管理员拒绝'
-      }
-    }
-  },
   async asyncData ({ vue, component }) {
     let loading = vue.$loading()
     let { data } = await vue.$axios.get(`${vue.$gatewayServer}/user/info`)
@@ -55,12 +43,25 @@ export default {
     if (data.status === 'status_normal') {
       // 审核通过则跳转
       // window.location.href = document.referrer
-      this.$router.push({ name: 'complete', query: { genee_oauth: this.$route.query.genee_oauth } })
+      vue.$router.push({ name: 'complete', query: { genee_oauth: vue.$route.query.genee_oauth } })
     }
-    this.status = data.status
-    this.info = data
-    delete this.info.status
+    let status = data.status
+    let info = data
+    delete info.status
     loading.close()
+    console.log(loading)
+    return {
+      status,
+      info
+    }
+  },
+  data () {
+    return {
+      message: {
+        'status_register': '等待审核,  若管理员超过 1 天还未激活您的账号,  请及时联系管理员为您激活账号',
+        'status_register_deny': '很抱歉, 您的审核已被管理员拒绝'
+      }
+    }
   }
 }
 </script>

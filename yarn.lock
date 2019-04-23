@@ -2355,7 +2355,7 @@ functional-red-black-tree@^1.0.1:
 
 "gapper-element-ui@git+https://bitbucket.org/genee/gapper-element-ui.git#re":
   version "0.0.0"
-  resolved "git+https://bitbucket.org/genee/gapper-element-ui.git#00911cb929bcb59d39b781aa63ecf82722b11ce8"
+  resolved "git+https://bitbucket.org/genee/gapper-element-ui.git#e03f9daf6ecb03d3cdff269e0d80a96b5bb98e5f"
   dependencies:
     element-ui "^2.7.1"
     eslint-plugin-json "^1.4.0"

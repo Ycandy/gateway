@@ -65,13 +65,13 @@
       el-cascader(
         v-model='cascader.researchGroup'
         name='researchGroup'
-        placeholder='课题组'
+        :placeholder='cascader.organization.length !== 0 && researchGroup.length === 0 ? "该组织机构下暂无课题组" : "课题组"'
         :options='researchGroup'
         :props='cascaderProps'
         clearable
         filterable
         change-on-select
-        :disabled='cascader.organization.length === 0'
+        :disabled='researchGroup.length === 0'
         @click.native='clickResearchGroup')
     .second-level
       .input-title 楼宇
@@ -90,13 +90,14 @@
       el-cascader(
         v-model='cascader.room'
         name='room'
-        placeholder='房间'
+        :placeholder='cascader.building.length !== 0 && room.length === 0 ? "该楼宇下暂无房间" : "房间"'
         :options='room'
         :props='cascaderProps'
         clearable
         filterable
         change-on-select
-        :disabled='cascader.building.length === 0')
+        :disabled='room.length === 0'
+        @click.native='clickRoom')
     .second-level
       .input-title 有效时间
       el-date-picker(
@@ -149,11 +150,8 @@ export default {
   },
   data () {
     return {
-      organization: [],
       researchGroup: [],
-      build: [],
       room: [],
-      types: [],
       cascader: {
         organization: [],
         researchGroup: [],
@@ -225,7 +223,6 @@ export default {
       loading.close()
     },
     clickResearchGroup () {
-      console.log(this.cascader.organization.length === 0)
       if (this.cascader.organization.length === 0) {
         this.$message({
           type: 'warning',
@@ -241,7 +238,15 @@ export default {
       this.room = roomResult.data || []
       loading.close()
     },
-    async fetcnUserTypes (data) {
+    clickRoom () {
+      if (this.cascader.building.length === 0) {
+        this.$message({
+          type: 'warning',
+          message: '请先选择楼宇'
+        })
+      }
+    },
+    fetcnUserTypes (data) {
       let types = {}
       let arr = []
       data.result.map(item => {
@@ -343,7 +348,7 @@ export default {
       form.group = group
 
       if (check) {
-        this.$axios.post(this.$config.app.sign, form)
+        this.$axios.post(`${this.$gatewayServer}/user/regist`, form)
           .then(res => {
             this.$router.push({ name: 'info', query: { genee_oauth: this.$route.query.genee_oauth } })
           })
@@ -367,6 +372,4 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.info
-  overflow: auto;
 </style>

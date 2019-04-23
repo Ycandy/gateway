@@ -70,12 +70,14 @@
       el-cascader(
         v-model='cascader.researchGroup'
         name='researchGroup'
-        placeholder='课题组'
+        :placeholder='cascader.organization.length !== 0 && researchGroup.length === 0 ? "该组织机构下暂无课题组" : "课题组"'
         :options='researchGroup'
         :props='cascaderProps'
         clearable
         filterable
-        change-on-select)
+        change-on-select
+        :disabled='researchGroup.length === 0'
+        @click.native='clickResearchGroup')
       input(type='hidden' name='researchGroup' v-model='form.researchGroup')
     .second-level
       .input-title 楼宇
@@ -95,12 +97,14 @@
       el-cascader(
         v-model='cascader.room'
         name='room'
-        placeholder='房间'
+        :placeholder='cascader.building.length !== 0 && room.length === 0 ? "该楼宇下暂无房间" : "房间"'
         :options='room'
         :props='cascaderProps'
         clearable
         filterable
-        change-on-select)
+        change-on-select
+        :disabled='room.length === 0'
+        @click.native='clickRoom')
       input(type='hidden' name='room' v-model='form.room')    
     .second-level
       .input-title 有效时间
@@ -151,7 +155,15 @@
 </template>
 
 <script>
+import { Input, Cascader, DatePicker, Button } from 'gapper-element-ui'
+
 export default {
+  components: {
+    [DatePicker.name]: DatePicker,
+    [Input.name]: Input,
+    [Cascader.name]: Cascader,
+    [Button.name]: Button
+  },
   data () {
     return {
       completeAction: `${this.gatewayServer}/user/improve-info`,
@@ -186,13 +198,13 @@ export default {
   async mounted () {
     let loading = this.$loading()
     let result = {}
-    let organizationResult = await this.$axios.get(`${this.$config.app.getOrganization}?type=organization`)
+    let organizationResult = await this.$axios.get(`${this.$gatewayServer}/group/list?type=organization`)
     Reflect.set(result, 'organization', organizationResult)
     this.organization = this.parseCascader(organizationResult.data || [])
-    let buildingResult = await this.$axios.get(`${this.$config.app.getOrganization}?type=building`)
+    let buildingResult = await this.$axios.get(`${this.$gatewayServer}/group/list?type=building`)
     Reflect.set(result, 'building', buildingResult)
     this.building = this.parseCascader(buildingResult.data || [])
-    let paramsResult = await this.$axios.get(this.$config.app.getParams)
+    let paramsResult = await this.$axios.get(`${this.$gatewayServer}/user/field`)
     let basicFields = {}
     paramsResult.data.basic.forEach(item => {
       if (['organization', 'building'].includes(item.key)) {
@@ -223,25 +235,6 @@ export default {
     loading.close()
   },
   methods: {
-    // parseOrganization (organization) {
-    //   let parent = {}
-    //   organization.forEach(item => {
-    //     if (!Reflect.has(parent, item.parent_id)) {
-    //       Reflect.set(parent, item.parent_id, {})
-    //     }
-    //     Reflect.set(parent[item.parent_id], item.id, item)
-    //   })
-
-    //   let keys = Object.keys(parent).map(item => Number(item))
-    //   let minKey = Math.min(...keys)
-    //   return Object.values(parent[minKey]).map(item => {
-    //     return {
-    //       id: item.id,
-    //       name: item.name,
-    //       children: this.pushOrganizationChildren(item.id, parent)
-    //     }
-    //   })
-    // },
     parseCascader (building) {
       let parentKeys = []
       let listObj = {}
@@ -264,16 +257,6 @@ export default {
 
       return arr
     },
-    // pushOrganizationChildren (key, parent) {
-    //   if (!parent[key]) return
-    //   let result = Object.values(parent[key])
-    //   result.forEach(item => {
-    //     if (Reflect.has(parent, item.id)) {
-    //       item.children = this.pushOrganizationChildren(item.id, parent)
-    //     }
-    //   })
-    //   return result
-    // },
     closeMessage () {
       this.closeMessageAnimate()
     },
@@ -296,16 +279,32 @@ export default {
       this.cascader.researchGroup = []
       let organization = value[value.length - 1]
       let researchGroupResult =
-        await this.$axios.get(`${this.$config.app.getOrganization}?type=researchGroup&id=${organization}`)
+        await this.$axios.get(`${this.$gatewayServer}/group/list?type=researchGroup&id=${organization}`)
       this.researchGroup = researchGroupResult.data || []
       loading.close()
+    },
+    clickResearchGroup () {
+      if (this.cascader.organization.length === 0) {
+        this.$message({
+          type: 'warning',
+          message: '请先选择组织机构'
+        })
+      }
+    },
+    clickRoom () {
+      if (this.cascader.building.length === 0) {
+        this.$message({
+          type: 'warning',
+          message: '请先选择楼宇'
+        })
+      }
     },
     async changeBuilding (value) {
       let loading = this.$loading()
       this.cascader.room = []
       let building = value[value.length - 1]
       let roomResult =
-        await this.$axios.get(`${this.$config.app.getOrganization}?type=room&id=${building}`)
+        await this.$axios.get(`${this.$gatewayServer}/group/list?type=room&id=${building}`)
       this.room = roomResult.data || []
       loading.close()
     },

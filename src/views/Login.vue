@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { Button, Input } from 'element-ui'
+import { Button, Input } from 'gapper-element-ui'
 
 export default {
   components: {
@@ -199,7 +199,6 @@ export default {
       align-items center
       .input-group
         width 100%
-        // position relative
         .input.el-input
           margin-top 30px
           padding-right 8px

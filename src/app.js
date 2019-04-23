@@ -3,7 +3,7 @@ import '~public/style/index.styl'
 import Vue from 'vue'
 import axios from 'axios'
 // import { Input, Button, Select, OptionGroup, Option, RadioGroup, Radio, , Message, Cascader, DatePicker } from 'element-ui'
-import { Loading, Message } from 'element-ui'
+import { Loading, Message } from 'gapper-element-ui'
 import { app } from '~/config'
 
 // Vue.prototype.$ELEMENT = { size: 'medium' }
