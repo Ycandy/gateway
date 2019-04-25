@@ -11,7 +11,8 @@
   "dependencies": {
     "axios": "^0.18.0",
     "gapper-app-base": "git+https://bitbucket.org/genee/gapper-app-base.git#bin",
-    "gapper-element-ui": "git+https://bitbucket.org/genee/gapper-element-ui.git#re"
+    "gapper-element-ui": "git+https://bitbucket.org/genee/gapper-element-ui.git#re",
+    "querystring": "^0.2.0"
   },
   "devDependencies": {}
 }

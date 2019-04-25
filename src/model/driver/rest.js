@@ -5,6 +5,7 @@ export default class Rest {
     this.axios = Axios.create({
       baseURL: baseURL,
       timeout: 20000,
+      withCredentials: true,
       headers
     })
   }

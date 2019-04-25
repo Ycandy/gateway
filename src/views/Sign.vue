@@ -1,6 +1,6 @@
 <template lang="pug">
 .info
-  .page-title
+  .title
     span 注册
   .form-board
     .first-level
@@ -136,9 +136,9 @@ export default {
   },
   async asyncData ({ vue, component }) {
     let loading = vue.$loading()
-    let organizationResult = await vue.$axios.get(`${vue.$gatewayServer}/group/list?type=organization`)
+    let organizationResult = await vue.$gateway.getGroup({ type: 'organization' })
     let organization = parseTree(organizationResult.data || [])
-    let buildingResult = await vue.$axios.get(`${vue.$gatewayServer}/group/list?type=building`)
+    let buildingResult = await vue.$gateway.getGroup({ type: 'building' })
     let building = parseTree(buildingResult.data || [])
     let userTypeResult = await vue.$axios.post(`${vue.$gatewayServer}/api`, { 'jsonrpc': '2.0', 'method': 'user/type/list', 'params': [], 'id': '1' })
     let userTypes = component.methods.fetcnUserTypes(userTypeResult.data || [])
@@ -197,7 +197,7 @@ export default {
       let loading = this.$loading()
       this.cascader.researchGroup = []
       let organization = value[value.length - 1]
-      let researchGroupResult = await this.$axios.get(`${this.$$gatewayServer}/group/list?type=researchGroup&id=${organization}`)
+      let researchGroupResult = await this.$gateway.get(`${this.$$gatewayServer}/group/list?type=researchGroup&id=${organization}`)
       this.researchGroup = researchGroupResult.data || []
       loading.close()
     },

@@ -1,5 +1,7 @@
 <template lang="pug">
-el-form.content
+form.content(ref='form'
+  method='post'
+  :action='$gateway.loginAction')
   .hidden-group(v-show='false')
     input(name='redirect' :value='$route.query.redirect')
     input(name='from' :value='$route.query.from')
@@ -22,11 +24,10 @@ el-form.content
 </template>
 
 <script>
-import { Form, Input, Button } from 'gapper-element-ui'
+import { Input, Button } from 'gapper-element-ui'
 
 export default {
   components: {
-    [Form.name]: Form,
     [Input.name]: Input,
     [Button.name]: Button
   },
