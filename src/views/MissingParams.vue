@@ -8,6 +8,7 @@
   .form-board
     .first-level
       span 账号信息
+      el-button(type='primary' style='float: right' @click='logout') 登出
     .second-level
       .input-title.required 邮箱
       el-input(
@@ -337,6 +338,9 @@ export default {
       }
       this.$set(field, 'tips', '')
       return true
+    },
+    logout () {
+      window.location.href = `${this.$gatewayServer}/logout`
     }
   }
 }

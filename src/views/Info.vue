@@ -4,6 +4,7 @@
   .form-board
     .first-level
       span 个人信息
+      el-button(type='primary' style='float: right' @click='logout') 登出
     .second-level
       .input-title 用户名
       .input-title.last {{ info.email }}
@@ -32,7 +33,12 @@
 </template>
 
 <script>
+import { Button } from 'gapper-element-ui'
+
 export default {
+  components: {
+    [Button.name]: Button
+  },
   async asyncData ({ vue, component }) {
     let loading = vue.$loading()
     let { data } = await vue.$axios.get(`${vue.$gatewayServer}/user/info`)
@@ -42,14 +48,13 @@ export default {
     // status_normal 通过
     if (data.status === 'status_normal') {
       // 审核通过则跳转
-      window.location.href = document.referrer
+      // window.location.href = document.referrer
       // vue.$router.push({ name: 'complete', query: { genee_oauth: vue.$route.query.genee_oauth } })
     }
     let status = data.status
     let info = data
     delete info.status
     loading.close()
-    console.log(loading)
     return {
       status,
       info
@@ -61,6 +66,11 @@ export default {
         'status_register': '等待审核,  若管理员超过 1 天还未激活您的账号,  请及时联系管理员为您激活账号',
         'status_register_deny': '很抱歉, 您的审核已被管理员拒绝'
       }
+    }
+  },
+  methods: {
+    logout () {
+      window.location.href = `${this.$gatewayServer}/logout`
     }
   }
 }
