@@ -136,12 +136,12 @@ export default {
   },
   async asyncData ({ vue, component }) {
     let loading = vue.$loading()
-    let organizationResult = await vue.$gateway.getGroup({ type: 'organization' })
-    let organization = parseTree(organizationResult.data || [])
-    let buildingResult = await vue.$gateway.getGroup({ type: 'building' })
-    let building = parseTree(buildingResult.data || [])
-    let userTypeResult = await vue.$axios.post(`${vue.$gatewayServer}/api`, { 'jsonrpc': '2.0', 'method': 'user/type/list', 'params': [], 'id': '1' })
-    let userTypes = component.methods.fetcnUserTypes(userTypeResult.data || [])
+    let organizationData = await vue.$gateway.getGroup({ type: 'organization' })
+    let organization = parseTree(organizationData || [])
+    let buildingData = await vue.$gateway.getGroup({ type: 'building' })
+    let building = parseTree(buildingData || [])
+    let userTypeData = await vue.$gateway.getUserType()
+    let userTypes = component.methods.fetcnUserTypes(userTypeData || [])
     loading.close()
     return {
       organization,
@@ -194,12 +194,12 @@ export default {
   },
   methods: {
     async changeOrganization (value) {
-      let loading = this.$loading()
-      this.cascader.researchGroup = []
-      let organization = value[value.length - 1]
-      let researchGroupResult = await this.$gateway.get(`${this.$$gatewayServer}/group/list?type=researchGroup&id=${organization}`)
-      this.researchGroup = researchGroupResult.data || []
-      loading.close()
+      // let loading = this.$loading()
+      // this.cascader.researchGroup = []
+      // let organization = value[value.length - 1]
+      // let researchGroupResult = await this.$gateway.get(`${this.$$gatewayServer}/group/list?type=researchGroup&id=${organization}`)
+      // this.researchGroup = researchGroupResult.data || []
+      // loading.close()
     },
     clickResearchGroup () {
       if (this.cascader.organization.length === 0) {
@@ -210,12 +210,12 @@ export default {
       }
     },
     async changeBuilding (value) {
-      let loading = this.$loading()
-      this.cascader.room = []
-      let building = value[value.length - 1]
-      let roomResult = await this.$axios.get(`${this.$gatewayServer}/group/list?type=room&id=${building}`)
-      this.room = roomResult.data || []
-      loading.close()
+      // let loading = this.$loading()
+      // this.cascader.room = []
+      // let building = value[value.length - 1]
+      // let roomResult = await this.$axios.get(`${this.$gatewayServer}/group/list?type=room&id=${building}`)
+      // this.room = roomResult.data || []
+      // loading.close()
     },
     clickRoom () {
       if (this.cascader.building.length === 0) {
@@ -228,7 +228,7 @@ export default {
     fetcnUserTypes (data) {
       let types = {}
       let arr = []
-      data.result.map(item => {
+      data.map(item => {
         types[item.key] = item
       })
       Object.keys(types).map(key => {
