@@ -6,7 +6,7 @@ module.exports = {
     port: 8001,
   },
   app: {
-    gateway: '/gateway',
+    gateway: 'http://test.gapper.in/gateway',
     redirect: ''
   }
 }
