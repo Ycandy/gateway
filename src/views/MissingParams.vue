@@ -1,5 +1,5 @@
 <template lang="pug">
-.info
+.info(v-if='load')
   .page-title
     span 补全用户信息
   .message(ref='message')
@@ -305,10 +305,14 @@ export default {
       })
 
       if (check) {
-        let form = Object.assign({}, {
+        let form = {
           phone: this.basicFields.phone.value,
-          ref_no: this.basicFields.ref_no.value
-        }, this.form)
+          ref_no: this.basicFields.ref_no.value,
+          organization: this.cascader.organization.slice().pop(),
+          researchGroup: this.cascader.researchGroup.slice().pop(),
+          building: this.cascader.building.slice().pop(),
+          room: this.cascader.room.slice().pop()
+        }
         await this.$axios.put(`${this.$gatewayServer}/user`, form)
         window.location.href = document.referrer
       } else {
