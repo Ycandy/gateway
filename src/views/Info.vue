@@ -50,7 +50,7 @@ export default {
       // 审核通过则跳转
       // window.location.href = document.referrer
       // vue.$router.push({ name: 'complete', query: { genee_oauth: vue.$route.query.genee_oauth } })
-      window.location.href = `${this.$$gatewayServer}/judge-login?genee_oauth=${this.$route.query.genee_oauth}`
+      window.location.href = `${this.$gatewayServer}/judge-login?genee_oauth=${this.$route.query.genee_oauth}`
     }
     let status = data.status
     let info = data
