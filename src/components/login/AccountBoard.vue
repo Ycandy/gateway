@@ -39,9 +39,22 @@ export default {
     }
   },
   methods: {
-    goReset () {},
-    goSign () {},
-    login () {}
+    goSign () {
+      this.$router.push({ name: 'sign', query: { genee_oauth: this.$route.query.genee_oauth } })
+    },
+    goReset () {
+      this.$router.push({ name: 'reset' })
+    },
+    login () {
+      if (!this.form.username || !this.form.password) {
+        this.$message({
+          type: 'error',
+          message: '请输入用户名或密码'
+        })
+        return
+      }
+      this.$refs.form.submit()
+    }
   }
 }
 </script>

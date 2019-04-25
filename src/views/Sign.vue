@@ -125,6 +125,7 @@
 
 <script>
 import { DatePicker, Input, Cascader, Button } from 'gapper-element-ui'
+import { parseTree } from '~src/utils/parseTree'
 
 export default {
   components: {
@@ -136,9 +137,9 @@ export default {
   async asyncData ({ vue, component }) {
     let loading = vue.$loading()
     let organizationResult = await vue.$axios.get(`${vue.$gatewayServer}/group/list?type=organization`)
-    let organization = component.methods.parseCascader(organizationResult.data || [])
+    let organization = parseTree(organizationResult.data || [])
     let buildingResult = await vue.$axios.get(`${vue.$gatewayServer}/group/list?type=building`)
-    let building = component.methods.parseCascader(buildingResult.data || [])
+    let building = parseTree(buildingResult.data || [])
     let userTypeResult = await vue.$axios.post(`${vue.$gatewayServer}/api`, { 'jsonrpc': '2.0', 'method': 'user/type/list', 'params': [], 'id': '1' })
     let userTypes = component.methods.fetcnUserTypes(userTypeResult.data || [])
     loading.close()
@@ -192,28 +193,6 @@ export default {
     }
   },
   methods: {
-    parseCascader (building) {
-      let parentKeys = []
-      let listObj = {}
-      building.forEach(item => {
-        parentKeys.indexOf(item.parent_id) >= 0 || parentKeys.push(item.parent_id)
-        Reflect.set(listObj, item.id, Object.assign({ children: [] }, item))
-      })
-      let arr = []
-      Object.keys(listObj).map(key => {
-        let item = listObj[key]
-        if (parentKeys.indexOf(item.id) < 0) {
-          delete item.children
-        }
-        if (Object.keys(listObj).indexOf(item.parent_id) >= 0) {
-          listObj[item.parent_id].children.push(item)
-        } else {
-          arr.push(item)
-        }
-      })
-
-      return arr
-    },
     async changeOrganization (value) {
       let loading = this.$loading()
       this.cascader.researchGroup = []
