@@ -44,7 +44,7 @@
     .tips(v-if="tips.userType")
       span {{ tips.userType}}
     .second-level
-      .input-title.required 学工号
+      .input-title 学工号
       el-input(v-model='form.card' name='card' placeholder='学工号')
     .tips(v-if='tips.card')
       span {{ tips.card }}
@@ -310,12 +310,12 @@ export default {
         tips.name = ''
       }
 
-      if (!form.card) {
-        tips.card = '请输入学工号'
-        check = false
-      } else {
-        tips.card = ''
-      }
+      // if (!form.card) {
+      //   tips.card = '请输入学工号'
+      //   check = false
+      // } else {
+      //   tips.card = ''
+      // }
 
       if (form.phone && !/^1(3|4|5|7|8)\d{9}$/.test(form.phone)) {
         tips.phone = '请输入正确的手机号'
