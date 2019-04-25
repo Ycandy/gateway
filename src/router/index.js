@@ -24,6 +24,10 @@ export function createRouter (baseRouterOption) {
       path: '/sign',
       component: r => require.ensure([], () => r(require('~src/views/Sign.vue')), 'sign')
     }, {
+      name: 'missing-params',
+      path: '/missing-params',
+      component: r => require.ensure([], () => r(require('~src/views/MissingParams.vue')), 'missing-params')
+    }, {
       name: 'reset',
       path: '/reset',
       component: r => require.ensure([], () => r(require('~src/views/Reset.vue')), 'reset')
