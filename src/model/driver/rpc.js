@@ -9,10 +9,10 @@ export default class Rpc {
     })
     return this
   }
-  rpc ({ resource, params = {} }) {
+  rpc ({ method, params = {} }) {
     return this.passenger.post('', {
       'jsonrpc': '2.0',
-      'method': resource,
+      method,
       'id': 1,
       'params': Object.keys(params).map(key => Reflect.get(params, key))
     }).then(r => Promise.resolve(r.data.result))

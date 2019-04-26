@@ -121,7 +121,7 @@ export default {
     [Button.name]: Button,
     DateRange
   },
-  async asyncData ({ vue, component }) {
+  async asyncData ({ vue }) {
     let loading = vue.$loading()
     let organizationData = await vue.$gateway.getGroup({ type: 'organization' })
     let organization = parseTree(organizationData || [])
@@ -252,33 +252,37 @@ export default {
 
       let check = Object.values(this.tips).filter(item => !!item).length === 0
       if (check) {
-        loading.close()
-        // try {
-        //   await this.$gateway.post(`${this.$gatewayServer}/user/regist`, form)
-        //   loading.close()
-        //   this.$router.push({ name: 'info', query: { genee_oauth: this.$route.query.genee_oauth } })
-        // } catch (err) {
-        //   if (err.response.body === 'email already esists') {
-        //     this.$message({
-        //       type: 'error',
-        //       message: '邮箱已经存在'
-        //     })
-        //   } else {
-        //     this.$message({
-        //       type: 'error',
-        //       message: '注册失败'
-        //     })
-        //   }
-        //   loading.close()
-        // }
+        try {
+          await this.$gateway.signup(this.parseForm(form))
+          loading.close()
+          this.$router.push({ name: 'info', query: { genee_oauth: this.$route.query.genee_oauth } })
+        } catch (err) {
+          if (err.response.body === 'email already esists') {
+            this.$message({
+              type: 'error',
+              message: '邮箱已经存在'
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: '注册失败'
+            })
+          }
+          loading.close()
+        }
       } else {
-        console.log(this.tips)
         this.$message({
           type: 'error',
           message: '提交失败, 请验证是否填写正确'
         })
         loading.close()
       }
+    },
+    parseForm (form) {
+      let result = Object.assign({}, form)
+      result.type = result.userType
+      delete result.userType
+      return result
     }
   }
 }

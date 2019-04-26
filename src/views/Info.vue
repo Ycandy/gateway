@@ -3,38 +3,38 @@
   .message(style='margin-top: 30px;') {{ message[status] }}
   .form
     .form__fieldset 个人信息
-    .second-level
-      .input-title 用户名
-      .input-title.last {{ info.email }}
-    .second-level
-      .input-title 姓名
-      .input-title.last {{ info.name }}
-    .second-level
-      .input-title 联系电话
-      .input-title.last {{ info.phone }}
-    .second-level
-      .input-title 人员类型
-      .input-title.last {{ info.type.name }}
-    .second-level
-      .input-title 学工号
-      .input-title.last {{ info.ref_no }}
-    .second-level
-      .input-title 分组
-      .input-title.last {{ info.group }}
-    .second-level
-      .input-title 有效时间
-      .input-title.last(style='display: flex;')
-        div {{ info.validStartDate || '-' }}
-        span.date-separator 至
-        div {{ info.validEndDate || '-' }}
-    .bottom
+      .form__field
+        .form__field__name 用户名
+        .form__field__text {{ info.email }}
+      .form__field
+        .form__field__name 姓名
+        .form__field__text {{ info.name }}
+      .form__field
+        .form__field__name 联系电话
+        .form__field__text {{ info.phone }}
+      .form__field
+        .form__field__name 人员类型
+        .form__field__text {{ info.type.name }}
+      .form__field
+        .form__field__name 学工号
+        .form__field__text {{ info.ref_no }}
+      .form__field
+        .form__field__name 分组
+        .form__field__text {{ info.group }}
+      .form__field
+        .form__field__name 有效时间
+        .form__field__text.flex
+          span {{ info.validStartDate || '-' }}
+          span.separator 至
+          span {{ info.validEndDate || '-' }}
+  .bottom
 </template>
 
 <script>
 export default {
   async asyncData ({ vue, component }) {
     let loading = vue.$loading()
-    let { data } = await vue.$axios.get(`${vue.$gatewayServer}/user/info`)
+    let data = await vue.$gateway.getUserInfo()
     // 返回结果的status有三个值
     // status_register 待审核
     // status_register_deny 被拒绝
@@ -48,7 +48,6 @@ export default {
     let info = data
     delete info.status
     loading.close()
-    console.log(loading)
     return {
       status,
       info
@@ -68,7 +67,8 @@ export default {
 <style lang="stylus" scoped>
 .bottom
   margin-bottom 40px
-.last
-  flex 1
-  text-align left
+.flex
+  display flex
+  .separator
+    padding 0 10px
 </style>
