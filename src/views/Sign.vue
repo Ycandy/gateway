@@ -2,137 +2,124 @@
 .info
   .title
     span 注册
-  .form-board
-    .first-level
-      span 账户信息
-    .second-level
-      .input-title.required 邮箱
-      el-input(v-model='form.email' name='email' placeholder='邮箱')
-    .tips(v-if='tips.email')
-      span {{ tips.email }}
-    .second-level
-      .input-title.required 密码
-      el-input(v-model='form.password'
-        type='password'
-        name='password'
-        placeholder='密码')
-    .tips(v-if='tips.password')
-      span {{ tips.password }}
-    .second-level
-      .input-title.required 请重复密码
-      el-input(v-model='form.repassword'
-        type='password'
-        name='repassword'
-        placeholder='请重复密码')
-    .tips(v-if='tips.repassword')
-      span {{ tips.repassword }}
-    .first-level
-      span 个人信息
-    .second-level
-      .input-title.required 姓名
-      el-input(v-model='form.name' name='name' placeholder='姓名')
-    .tips(v-if='tips.name')
-      span {{ tips.name }}
-    .second-level
-      .input-title 联系电话
-      el-input(v-model='form.phone' name='phone' placeholder='联系电话')
-    .tips(v-if='tips.phone')
-      span {{ tips.phone }}
-    .second-level
-      .input-title.required 人员类型
-      el-cascader(v-model='userTypes' placeholder="选择任意级分组" :options="types" filterable change-on-select style="width: 100%")
-    .tips(v-if="tips.userType")
-      span {{ tips.userType}}
-    .second-level
-      .input-title.required 学工号
-      el-input(v-model='form.card' name='card' placeholder='学工号')
-    .tips(v-if='tips.card')
-      span {{ tips.card }}
-    .second-level
-      .input-title 组织机构
-      el-cascader(
-        v-model='cascader.organization'
-        name='organization'
-        placeholder='所属分组'
-        :options='organization'
-        :props='cascaderProps'
-        clearable
-        filterable
-        change-on-select
-        @change='changeOrganization')
-    .second-level
-      .input-title 课题组
-      el-cascader(
-        v-model='cascader.researchGroup'
-        name='researchGroup'
-        :placeholder='cascader.organization.length !== 0 && researchGroup.length === 0 ? "该组织机构下暂无课题组" : "课题组"'
-        :options='researchGroup'
-        :props='cascaderProps'
-        clearable
-        filterable
-        change-on-select
-        :disabled='researchGroup.length === 0'
-        @click.native='clickResearchGroup')
-    .second-level
-      .input-title 楼宇
-      el-cascader(
-        v-model='cascader.building'
-        name='building'
-        placeholder='楼宇'
-        :options='building'
-        :props='cascaderProps'
-        clearable
-        filterable
-        change-on-select
-        @change='changeBuilding')
-    .second-level
-      .input-title 房间
-      el-cascader(
-        v-model='cascader.room'
-        name='room'
-        :placeholder='cascader.building.length !== 0 && room.length === 0 ? "该楼宇下暂无房间" : "房间"'
-        :options='room'
-        :props='cascaderProps'
-        clearable
-        filterable
-        change-on-select
-        :disabled='room.length === 0'
-        @click.native='clickRoom')
-    .second-level
-      .input-title 有效时间
-      el-date-picker(
-        style='width: 45%;'
-        v-model='form.validStartDate'
-        name='validStartDate'
-        type="date"
-        placeholder="开始日期"
-        value-format='yyyy-MM-dd'
-        editable
-      )
-      span.date-separator 至
-      el-date-picker(
-        style='width: 45%;'
-        v-model='form.validEndDate'
-        name='validEndDate'
-        type="date"
-        placeholder="结束时间"
-        value-format='yyyy-MM-dd'
-        editable
-      )
-    .button-line
+  .form
+    .form__fieldset 账户信息
+      .form__field
+        .form__field__name.form__field__name--required 邮箱
+        .form__field__text
+          el-input(v-model='form.email' name='email' placeholder='邮箱')
+        .form__field__tip(v-if='tips.email') {{ tips.email }}
+      .form__field
+        .form__field__name.form__field__name--required 密码
+        .form__field__text
+          el-input(type='password' v-model='form.password'
+            name='password'
+            placeholder='密码')
+        .form__field__tip(v-if='tips.password') {{ tips.password }}
+      .form__field
+        .form__field__name.form__field__name--required 请重复密码
+        .form__field__text
+          el-input(type='password' v-model='form.repassword'
+            name='repassword'
+            placeholder='请重复密码')
+        .form__field__tip(v-if='tips.repassword') {{ tips.repassword }}
+    .form__fieldset 个人信息
+      .form__field
+        .form__field__name.form__field__name--required 姓名
+        .form__field__text
+          el-input(v-model='form.name' name='name' placeholder='姓名')
+        .form__field__tip(v-if='tips.name') {{ tips.name }}
+      .form__field
+        .form__field__name.form__field__name--required 联系电话
+        .form__field__text
+          el-input(v-model='form.phone' name='phone' placeholder='联系电话')
+        .form__field__tip(v-if='tips.phone') {{ tips.phone }}
+      .form__field
+        .form__field__name.form__field__name--required 人员类型
+        .form__field__text
+          el-cascader(placeholder="选择任意级分组"
+            :options="userTypes" :props='typeCascaderProps' 
+            filterable
+            change-on-select
+            @change='changeUserType')
+        .form__field__tip(v-if="tips.userType") {{ tips.userType }}
+      .form__field
+        .form__field__name 学工号
+        .form__field__text
+          el-input(v-model='form.card' name='card' placeholder='学工号')
+        .form__field__tip(v-if='tips.card') {{ tips.card }}
+      .form__field
+        .form__field__name 组织机构
+        .form__field__text
+          el-cascader(
+            placeholder='所属分组'
+            :options='organization' :props='groupCascaderProps'
+            clearable
+            filterable
+            change-on-select
+            @change='changeOrganization')
+      .form__field
+        .form__field__name 课题组
+        .form__field__text
+          el-cascader(
+            :placeholder='form.organization && researchGroup.length === 0 ? "该组织机构下暂无课题组" : "课题组"'
+            :options='researchGroup' :props='groupCascaderProps'
+            :disabled='researchGroup.length === 0'
+            clearable
+            filterable
+            change-on-select
+            @click.native='clickResearchGroup'
+            @change='changeResearchGroup')
+      .form__field
+        .form__field__name 楼宇
+        .form__field__text
+          el-cascader(
+            placeholder='楼宇'
+            :options='building' :props='groupCascaderProps'
+            clearable
+            filterable
+            change-on-select
+            @change='changeBuilding')
+      .form__field
+        .form__field__name 房间
+        .form__field__text
+          el-cascader(
+            :placeholder='form.building && room.length === 0 ? "该楼宇下暂无房间" : "房间"'
+            :options='room' :props='groupCascaderProps'
+            :disabled='room.length === 0'
+            clearable
+            filterable
+            change-on-select
+            @click.native='clickRoom'
+            @change='changeRoom')
+      .form__field
+        .form__field__name 有效时间
+        .form__field__text
+          date-range(
+            :startDate='form.validStartDate'
+            :endDate='form.validEndDate'
+            @changeStartDate='changeStartDate'
+            @changeEndDate='changeEndDate'
+          )
+        .form__field__tip(v-if='tips.validDate') {{ tips.validDate }}
+    .form__btn-group
       el-button(type='primary' @click='submit') 提交
 </template>
 
 <script>
-import { DatePicker, Input, Cascader, Button } from 'gapper-element-ui'
-import { parseTree } from '~src/utils/parseTree'
+import { Input, Cascader, Button } from 'gapper-element-ui'
+import { parseTree } from '~src/utils/parse-tree'
+import Validator from '~src/utils/validator'
+import DateRange from '~src/components/common/form/date-range'
+
+const validator = new Validator()
 
 export default {
   components: {
-    [DatePicker.name]: DatePicker,
     [Input.name]: Input,
     [Cascader.name]: Cascader,
-    [Button.name]: Button
+    [Button.name]: Button,
+    DateRange
   },
   async asyncData ({ vue, component }) {
     let loading = vue.$loading()
@@ -141,26 +128,24 @@ export default {
     let buildingData = await vue.$gateway.getGroup({ type: 'building' })
     let building = parseTree(buildingData || [])
     let userTypeData = await vue.$gateway.getUserType()
-    let userTypes = component.methods.fetcnUserTypes(userTypeData || [])
+    let userTypes = parseTree(userTypeData || [], { id: 'key', parent_id: 'parent_key' })
     loading.close()
     return {
       organization,
       building,
-      types: userTypes
+      userTypes
     }
   },
   data () {
     return {
       researchGroup: [],
       room: [],
-      cascader: {
-        organization: [],
-        researchGroup: [],
-        building: [],
-        room: []
+      typeCascaderProps: {
+        value: 'key',
+        label: 'name',
+        children: 'children'
       },
-      userTypes: [],
-      cascaderProps: {
+      groupCascaderProps: {
         value: 'id',
         label: 'name',
         children: 'children'
@@ -171,7 +156,7 @@ export default {
         repassword: '',
         name: '',
         phone: '',
-        type: '',
+        userType: '',
         card: '',
         organization: '',
         researchGroup: '',
@@ -180,170 +165,119 @@ export default {
         validStartDate: '',
         validEndDate: ''
       },
-      tips: {
-        email: '',
-        password: '',
-        repassword: '',
-        name: '',
-        phone: '',
-        userType: '',
-        type: '',
-        card: ''
-      }
+      tips: {}
     }
   },
   methods: {
+    changeUserType (value) {
+      this.form.userType = value[value.length - 1]
+    },
     async changeOrganization (value) {
-      // let loading = this.$loading()
-      // this.cascader.researchGroup = []
-      // let organization = value[value.length - 1]
-      // let researchGroupResult = await this.$gateway.get(`${this.$$gatewayServer}/group/list?type=researchGroup&id=${organization}`)
-      // this.researchGroup = researchGroupResult.data || []
-      // loading.close()
+      let loading = this.$loading()
+      this.form.organization = value[value.length - 1]
+      this.form.researchGroup = ''
+      let researchGroupData = await this.$gateway.getGroup({ type: 'researchGroup', id: this.form.organization })
+      this.researchGroup = researchGroupData || []
+      loading.close()
     },
     clickResearchGroup () {
-      if (this.cascader.organization.length === 0) {
+      if (!this.form.organization) {
         this.$message({
           type: 'warning',
           message: '请先选择组织机构'
         })
       }
     },
+    changeResearchGroup (value) {
+      this.form.researchGroup = value[value.length - 1]
+    },
     async changeBuilding (value) {
-      // let loading = this.$loading()
-      // this.cascader.room = []
-      // let building = value[value.length - 1]
-      // let roomResult = await this.$axios.get(`${this.$gatewayServer}/group/list?type=room&id=${building}`)
-      // this.room = roomResult.data || []
-      // loading.close()
+      let loading = this.$loading()
+      this.form.building = value[value.length - 1]
+      this.form.room = ''
+      let roomData = await this.$gateway.getGroup({ type: 'room', id: this.form.building })
+      this.room = roomData || []
+      loading.close()
     },
     clickRoom () {
-      if (this.cascader.building.length === 0) {
+      if (!this.form.building) {
         this.$message({
           type: 'warning',
           message: '请先选择楼宇'
         })
       }
     },
-    fetcnUserTypes (data) {
-      let types = {}
-      let arr = []
-      data.map(item => {
-        types[item.key] = item
-      })
-      Object.keys(types).map(key => {
-        let parentKey = types[key].parent_key
-        types[key].value = types[key].key
-        types[key].label = types[key].name
-        if (!parentKey) {
-          arr.push(types[key])
-        } else {
-          if (types[key].parent_key) {
-            if (!types[parentKey].children) {
-              types[parentKey].children = []
-              types[parentKey].children.push(types[key])
-            } else {
-              types[parentKey].children.push(types[key])
-            }
-          }
-        }
-      })
-      return arr
+    changeRoom (value) {
+      this.form.room = value[value.length - 1]
     },
-    submit () {
-      let check = true
+    changeStartDate (value) {
+      this.form.validStartDate = value
+    },
+    changeEndDate (value) {
+      this.form.validEndDate = value
+    },
+    async submit () {
+      let loading = this.$loading()
 
-      let form = this.form
-      let tips = this.tips
-      if (!form.email) {
-        tips.email = '请输入邮箱'
-        check = false
-      } else if (!/^\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]*\.)+[A-Za-z]{2,14}$/.test(form.email)) {
-        tips.email = '请输入正确的邮箱格式'
-        check = false
-      } else {
-        tips.email = ''
-      }
+      let form = Object.assign({}, this.form)
+      this.tips = {}
+      this.tips.email = validator.validate([
+        { value: form.email, type: 'required', message: '请输入邮箱' },
+        { value: form.email, type: 'email', message: '请输入正确的邮箱格式' }
+      ])
+      this.tips.password = validator.validate([
+        { value: form.password, type: 'required', message: '请输入密码' }
+      ])
+      this.tips.repassword = validator.validate([
+        { value: form.repassword, type: 'required', message: '请输入密码' },
+        { value: form.repassword, type: 'equal', message: '两次输入的密码不一致' }
+      ])
+      this.tips.name = validator.validate([
+        { value: form.name, type: 'required', message: '请输入姓名' }
+      ])
+      this.tips.card = validator.validate([
+        { value: form.card, type: 'required', message: '请输入学工号' }
+      ])
+      this.tips.phone = validator.validate([
+        { value: form.phone, type: 'phone', message: '请输入正确的手机号' }
+      ])
+      this.tips.userType = validator.validate([
+        { value: form.userType, type: 'required', message: '请选择用户类型' }
+      ])
+      this.tips.validDate = validator.validate([
+        { value: form.validStartDate, type: 'required', message: '请填写有效开始时间' },
+        { value: form.validEndDate, type: 'required', message: '请填写有效结束时间' },
+        { value: [form.validStartDate, form.validEndDate], type: 'greaterThan', message: '有效开始时间不能晚于有效结束时间' }
+      ])
 
-      if (!form.password) {
-        tips.password = '请输入密码'
-        check = false
-      } else {
-        tips.password = ''
-      }
-
-      if (!form.repassword) {
-        tips.repassword = '请输入密码'
-        check = false
-      } else if (form.password !== form.repassword) {
-        tips.repassword = '两次输入的密码不一致'
-        check = false
-      } else {
-        tips.repassword = ''
-      }
-
-      if (!form.name) {
-        tips.name = '请输入姓名'
-        check = false
-      } else {
-        tips.name = ''
-      }
-
-      if (!form.card) {
-        tips.card = '请输入学工号'
-        check = false
-      } else {
-        tips.card = ''
-      }
-
-      if (form.phone && !/^1(3|4|5|7|8)\d{9}$/.test(form.phone)) {
-        tips.phone = '请输入正确的手机号'
-        check = false
-      } else {
-        tips.phone = ''
-      }
-
-      if (this.userTypes.length <= 0) {
-        tips.userType = '请选择用户类型'
-        check = false
-      } else {
-        tips.userType = ''
-      }
-
-      if (form.validStartDate && !form.validEndDate) {
-        tips.type = '请填写有效结束时间'
-        check = false
-      } else if (!form.validStartDate && form.validEndDate) {
-        tips.type = '请填写有效开始时间'
-        check = false
-      } else if (form.validStartDate && form.validEndDate && form.validStartDate > form.validEndDate) {
-        tips.type = '有效开始时间不能晚于有效结束时间'
-        check = false
-      } else {
-        tips.type = ''
-      }
-      form.type = this.userTypes[this.userTypes.length - 1]
-      let group = Object.values(this.cascader).filter(item => item.length > 0).map(item => item[item.length - 1])
-      form.group = group
-
+      let check = Object.values(this.tips).filter(item => !!item).length === 0
       if (check) {
-        this.$axios.post(`${this.$gatewayServer}/user/regist`, form)
-          .then(res => {
-            this.$router.push({ name: 'info', query: { genee_oauth: this.$route.query.genee_oauth } })
-          })
-          .catch(err => {
-            if (err.response.body === 'email already esists') {
-              this.$message({
-                type: 'error',
-                message: '邮箱已经存在'
-              })
-            }
-          })
+        loading.close()
+        // try {
+        //   await this.$gateway.post(`${this.$gatewayServer}/user/regist`, form)
+        //   loading.close()
+        //   this.$router.push({ name: 'info', query: { genee_oauth: this.$route.query.genee_oauth } })
+        // } catch (err) {
+        //   if (err.response.body === 'email already esists') {
+        //     this.$message({
+        //       type: 'error',
+        //       message: '邮箱已经存在'
+        //     })
+        //   } else {
+        //     this.$message({
+        //       type: 'error',
+        //       message: '注册失败'
+        //     })
+        //   }
+        //   loading.close()
+        // }
       } else {
+        console.log(this.tips)
         this.$message({
           type: 'error',
           message: '提交失败, 请验证是否填写正确'
         })
+        loading.close()
       }
     }
   }

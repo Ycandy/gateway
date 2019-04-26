@@ -1,9 +1,8 @@
 <template lang="pug">
 .info
   .message(style='margin-top: 30px;') {{ message[status] }}
-  .form-board
-    .first-level
-      span 个人信息
+  .form
+    .form__fieldset 个人信息
     .second-level
       .input-title 用户名
       .input-title.last {{ info.email }}

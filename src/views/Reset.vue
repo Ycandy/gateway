@@ -2,9 +2,8 @@
 .index
   .page-title
     span 找回密码
-  .form-board
-    .first-level
-      span 请输入您需要找回登录密码账户的邮箱
+  .form
+    .form__fieldset 请输入您需要找回登录密码账户的邮箱
     .second-level
       .input-title 账户邮箱
       el-input(v-model='mail')
@@ -18,7 +17,6 @@
 </template>
 
 <script>
-
 export default {
   data () {
     return {

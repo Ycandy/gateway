@@ -5,7 +5,7 @@
   .message(ref='message')
     span 你好!&nbsp;&nbsp;您是首次登录,&nbsp;&nbsp;请首先补全信息
     i.el-icon-close(style='cursor: pointer;margin-left: 20px;' @click='closeMessage')
-  form.form-board(
+  form.form(
     v-if='load'
     ref='form'
     method='post'
@@ -20,8 +20,7 @@
       input(
         name='genee_oauth'
         :value='$route.query.genee_oauth')
-    .first-level
-      span 账号信息
+    .form__fieldset 账号信息
     .second-level
       .input-title.required 邮箱
       el-input(
@@ -30,8 +29,7 @@
         disabled)
     .tips(v-if='basicFields.email.tips')
       span {{ basicFields.email.tips }}
-    .first-level
-      span 个人信息
+    .form__fieldset 个人信息
     .second-level
       .input-title.required 姓名
       el-input(v-model='basicFields.name.value' name='name' placeholder='姓名' disabled)
@@ -127,8 +125,7 @@
         value-format='yyyy-MM-dd'
         disabled
       )
-    .first-level
-      span 其他信息
+    .form__fieldset 其他信息
     template(v-for='field in extendFields')
       .second-level
         .input-title(:class='{ "required": field.required }') {{ field.name }}

@@ -7,10 +7,10 @@
 </template>
 
 <script>
-import basePxMixin from '~src/mixins/basePx'
+import basePxMixin from '~src/mixins/base-px'
 import { Button, Input } from 'gapper-element-ui'
-import Tab from '~src/components/login/Tab.vue'
-const AccountBoard = r => require.ensure([], () => r(require('~src/components/login/AccountBoard')), 'account-board')
+import Tab from '~src/components/login/tab.vue'
+const AccountBoard = r => require.ensure([], () => r(require('~src/components/login/account-board')), 'account-board')
 
 export default {
   components: {
