@@ -1,23 +1,35 @@
 <template lang="pug">
-.index
-  .page-title
-    span 找回密码
+.info
+  .title 找回密码
+  message(:message='"请输入您需要找回登录密码账户的邮箱"')
   .form
-    .form__fieldset 请输入您需要找回登录密码账户的邮箱
-    .second-level
-      .input-title 账户邮箱
-      el-input(v-model='mail')
-    .second-level
-      .input-title 验证码
-      el-input(style='width: 200px' v-model='inputCode')
-      .id-code(@click='createCode') {{ checkCode }}
-      span.error-log(v-if='show') {{ tip }}
-    .button-line
-      el-button(type='primary' @click='submit') 提交
+    .form__fieldset
+      .form__field
+        .form__field__name
+          span 账户邮箱
+        .form__field__text
+          el-input(v-model='mail')
+      .form__field
+        .form__field__name
+          span 验证码
+        .form__field__text
+          el-input(v-model='inputCode')
+        .id-code(@click='createCode') {{ checkCode }}
+        span.error-log(v-if='show') {{ tip }}
+    .form__btn-group
+      el-button.submit-btn(type='primary' @click='submit') 提交
 </template>
 
 <script>
+import { Input, Button } from 'gapper-element-ui'
+import Message from '~src/components/common/message.vue'
+
 export default {
+  components: {
+    [Input.name]: Input,
+    [Button.name]: Button,
+    Message
+  },
   data () {
     return {
       mail: '',
@@ -62,9 +74,9 @@ export default {
 
 <style lang="stylus" scoped>
 .id-code
+  margin 8px 0 8px 20px
   width 100px
   height 30px
-  margin 8px 20px
 .id-code
   font-family Arial
   font-style italic

@@ -33,19 +33,4 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.message
-  width 50%
-  height 36px
-  min-width 800px
-  line-height 36px
-  font-size 14px
-  color #CC6561
-  background #FFF6DB
-  border-radius 3px
-  text-align center
-  margin 0 auto
-  overflow hidden
-  &__icon
-    cursor pointer
-    margin-left 20px
 </style>

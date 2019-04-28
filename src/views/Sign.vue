@@ -1,23 +1,25 @@
 <template lang="pug">
 .info
-  .title
-    span 注册
+  .title 注册
   .form
     .form__fieldset 账户信息
       .form__field
-        .form__field__name.form__field__name--required 邮箱
+        .form__field__name.form__field__name--required
+          span 邮箱
         .form__field__text
           el-input(v-model='form.email' name='email' placeholder='邮箱')
         .form__field__tip(v-if='tips.email') {{ tips.email }}
       .form__field
-        .form__field__name.form__field__name--required 密码
+        .form__field__name.form__field__name--required
+          span 密码
         .form__field__text
           el-input(type='password' v-model='form.password'
             name='password'
             placeholder='密码')
         .form__field__tip(v-if='tips.password') {{ tips.password }}
       .form__field
-        .form__field__name.form__field__name--required 请重复密码
+        .form__field__name.form__field__name--required
+          span 请重复密码
         .form__field__text
           el-input(type='password' v-model='form.repassword'
             name='repassword'
@@ -25,17 +27,20 @@
         .form__field__tip(v-if='tips.repassword') {{ tips.repassword }}
     .form__fieldset 个人信息
       .form__field
-        .form__field__name.form__field__name--required 姓名
+        .form__field__name.form__field__name--required
+          span 姓名
         .form__field__text
           el-input(v-model='form.name' name='name' placeholder='姓名')
         .form__field__tip(v-if='tips.name') {{ tips.name }}
       .form__field
-        .form__field__name.form__field__name--required 联系电话
+        .form__field__name.form__field__name--required
+          span 联系电话
         .form__field__text
           el-input(v-model='form.phone' name='phone' placeholder='联系电话')
         .form__field__tip(v-if='tips.phone') {{ tips.phone }}
       .form__field
-        .form__field__name.form__field__name--required 人员类型
+        .form__field__name.form__field__name--required
+          span 人员类型
         .form__field__text
           el-cascader(placeholder="选择任意级分组"
             :options="userTypes" :props='typeCascaderProps' 
@@ -44,12 +49,14 @@
             @change='changeUserType')
         .form__field__tip(v-if="tips.userType") {{ tips.userType }}
       .form__field
-        .form__field__name 学工号
+        .form__field__name
+          span 学工号
         .form__field__text
           el-input(v-model='form.card' name='card' placeholder='学工号')
         .form__field__tip(v-if='tips.card') {{ tips.card }}
       .form__field
-        .form__field__name 组织机构
+        .form__field__name
+          span 组织机构
         .form__field__text
           el-cascader(
             placeholder='所属分组'
@@ -59,7 +66,8 @@
             change-on-select
             @change='changeOrganization')
       .form__field
-        .form__field__name 课题组
+        .form__field__name
+          span 课题组
         .form__field__text
           el-cascader(
             :placeholder='form.organization && researchGroup.length === 0 ? "该组织机构下暂无课题组" : "课题组"'
@@ -71,7 +79,8 @@
             @click.native='clickResearchGroup'
             @change='changeResearchGroup')
       .form__field
-        .form__field__name 楼宇
+        .form__field__name
+          span 楼宇
         .form__field__text
           el-cascader(
             placeholder='楼宇'
@@ -81,7 +90,8 @@
             change-on-select
             @change='changeBuilding')
       .form__field
-        .form__field__name 房间
+        .form__field__name
+          span 房间
         .form__field__text
           el-cascader(
             :placeholder='form.building && room.length === 0 ? "该楼宇下暂无房间" : "房间"'
@@ -93,7 +103,8 @@
             @click.native='clickRoom'
             @change='changeRoom')
       .form__field
-        .form__field__name 有效时间
+        .form__field__name
+          span 有效时间
         .form__field__text
           date-range(
             :startDate='form.validStartDate'
@@ -244,11 +255,13 @@ export default {
       this.tips.userType = validator.validate([
         { value: form.userType, type: 'required', message: '请选择用户类型' }
       ])
-      this.tips.validDate = validator.validate([
-        { value: form.validStartDate, type: 'required', message: '请填写有效开始时间' },
-        { value: form.validEndDate, type: 'required', message: '请填写有效结束时间' },
-        { value: [form.validStartDate, form.validEndDate], type: 'greaterThan', message: '有效开始时间不能晚于有效结束时间' }
-      ])
+      if (form.validStartDate && form.validEndDate) {
+        this.tips.validDate = validator.validate([
+          // { value: form.validStartDate, type: 'required', message: '请填写有效开始时间' },
+          // { value: form.validEndDate, type: 'required', message: '请填写有效结束时间' },
+          { value: [form.validStartDate, form.validEndDate], type: 'greaterThan', message: '有效开始时间不能晚于有效结束时间' }
+        ])
+      }
 
       let check = Object.values(this.tips).filter(item => !!item).length === 0
       if (check) {

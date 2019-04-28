@@ -4,25 +4,32 @@
   .form
     .form__fieldset 个人信息
       .form__field
-        .form__field__name 用户名
+        .form__field__name
+          span 用户名
         .form__field__text {{ info.email }}
       .form__field
-        .form__field__name 姓名
+        .form__field__name
+          span 姓名
         .form__field__text {{ info.name }}
       .form__field
-        .form__field__name 联系电话
+        .form__field__name
+          span 联系电话
         .form__field__text {{ info.phone }}
       .form__field
-        .form__field__name 人员类型
+        .form__field__name
+          span 人员类型
         .form__field__text {{ info.type.name }}
       .form__field
-        .form__field__name 学工号
+        .form__field__name
+          span 学工号
         .form__field__text {{ info.ref_no }}
       .form__field
-        .form__field__name 分组
+        .form__field__name
+          span 分组
         .form__field__text {{ info.group }}
       .form__field
-        .form__field__name 有效时间
+        .form__field__name
+          span 有效时间
         .form__field__text.flex
           span {{ info.validStartDate || '-' }}
           span.separator 至
