@@ -19,12 +19,15 @@
       //- .qq.type(:class='{ "active": active === "qq" }')
       //-   .icon-png
       //-   span QQ
-    form.form(v-if='active === "account"'
+    form.form(
       :style='{"height" : baseXp * 39 + "px", "width" : baseXp * 80 + "px"}'
       ref='form'
       method='post'
       :action='loginAction')
       .input-group(v-show='false')
+        input(
+          name='type'
+          :value='active')
         input(
           name='redirect'
           :value='$route.query.redirect')
