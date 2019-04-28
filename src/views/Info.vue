@@ -2,7 +2,10 @@
 .info
   .message(style='margin-top: 30px;') {{ message[status] }}
   .form
-    .form__fieldset 个人信息
+    .form__fieldset
+      .form__fieldset__title 个人信息
+      .form__fieldset__btn
+        el-button(type='primary' @click='logout') 登出
       .form__field
         .form__field__name
           span 用户名
@@ -50,6 +53,7 @@ export default {
       // 审核通过则跳转
       // window.location.href = document.referrer
       vue.$router.push({ name: 'complete', query: { genee_oauth: vue.$route.query.genee_oauth } })
+      return
     }
     let status = data.status
     let info = data
@@ -66,6 +70,11 @@ export default {
         'status_register': '等待审核,  若管理员超过 1 天还未激活您的账号,  请及时联系管理员为您激活账号',
         'status_register_deny': '很抱歉, 您的审核已被管理员拒绝'
       }
+    }
+  },
+  methods: {
+    logout () {
+      window.location.href = this.$gateway.logoutUrl
     }
   }
 }

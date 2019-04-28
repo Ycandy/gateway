@@ -2,7 +2,8 @@
 .info
   .title 注册
   .form
-    .form__fieldset 账户信息
+    .form__fieldset
+      .form__fieldset__title 账户信息
       .form__field
         .form__field__name.form__field__name--required
           span 邮箱
@@ -25,7 +26,8 @@
             name='repassword'
             placeholder='请重复密码')
         .form__field__tip(v-if='tips.repassword') {{ tips.repassword }}
-    .form__fieldset 个人信息
+    .form__fieldset
+      .form__fieldset__title 个人信息
       .form__field
         .form__field__name.form__field__name--required
           span 姓名

@@ -50,6 +50,9 @@ body
   overflow auto
   background-color #fff
   &__fieldset
+    display flex
+    flex-wrap wrap
+    justify-content space-between
     margin-top 10px
     box-sizing border-box
     padding-top 20px
@@ -57,6 +60,11 @@ body
     line-height 72px
     font-size 18px
     color #333333
+    &__title
+      display inline-block
+    &__btn
+      display inline-block
+      line-height 72px
   &__field
     display flex
     flex-direction row

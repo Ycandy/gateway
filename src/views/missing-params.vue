@@ -1,12 +1,9 @@
 <template lang="pug">
 .info
-  .title 补全用户信息
-  message(:message='"您好!  您是首次登陆, 请先补全信息"')
-  form.form(ref='form' method='post' :action='$gateway.completeAction')
-    .hidden-group(v-show='false')
-      input(name='redirect' :value='$route.query.redirect')
-      input(name='from' :value='$route.query.from')
-      input(name='genee_oauth' :value='$route.query.genee_oauth')
+  .title
+    span 补全用户信息
+  message(:message='$route.query.message || ""')
+  .form
     .form__fieldset
       .form__fieldset__title 账号信息
       .form__fieldset__btn
@@ -113,22 +110,6 @@
             @changeStartDate='changeStartDate'
             @changeEndDate='changeEndDate'
           )
-    .form__fieldset
-      .form__fieldset__title 其他信息
-      template(v-for='field in extendParams')
-        .form__field
-          .form__field__name(:class='{ "form__field__name--required": field.required }')
-            span {{ field.name }}
-          .form__field__text
-            el-input(v-if='field.type === 0' v-model='form[field.key]' :name='field.key')
-            template(v-else-if='field.type === 1')
-              el-select(v-model='form[field.key]' :name='field.key')
-                el-option(v-for='option in field.select'
-                  :key='option' :label='option' :value='option')
-              input(type='hidden' v-model='form[field.key]' :name='field.key')
-            el-input(v-if='field.type === 2' type='number'
-              v-model='form[field.key]' :name='field.key')
-          .form__field__tip(v-if='tips[field.key]') {{ tips[field.key] }}
     .form__btn-group
       el-button.submit-btn(type='primary' @click='submit') 提交
 </template>
@@ -152,9 +133,6 @@ const parseForm = paramsData => {
       default:
         Reflect.set(form, item.key, item.value)
     }
-  })
-  paramsData.extend.forEach(item => {
-    Reflect.set(form, item.key, item.value)
   })
   return form
 }
@@ -331,7 +309,7 @@ export default {
     changeEndDate (value) {
       this.form.validEndDate = value
     },
-    submit () {
+    async submit () {
       let loading = this.$loading()
 
       let form = Object.assign({}, this.form)
@@ -346,18 +324,11 @@ export default {
         ])
       }
 
-      this.extendParams.forEach(item => {
-        if (item.required) {
-          this.tips[item.key] = validator.validate([
-            { value: form[item.key], type: 'required', message: `请填写${item.name}` }
-          ])
-        }
-      })
-
       let check = Object.values(this.tips).filter(item => !!item).length === 0
       if (check) {
         loading.close()
-        this.$refs.form.submit()
+        await this.$gateway.setUser(form)
+        window.location.href = document.referrer
       } else {
         this.$message({
           type: 'error',
@@ -371,4 +342,6 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.info >>> .el-input__prefix
+  padding-left 0
 </style>

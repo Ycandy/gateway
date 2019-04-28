@@ -6,6 +6,7 @@ import config from '~/config'
 const baseURL = config.app.gateway
 const loginAction = `${baseURL}/auth`
 const completeAction = `${baseURL}/user/improve-info`
+const logoutUrl = `${baseURL}/logout`
 
 export default class Gateway {
   constructor () {
@@ -13,6 +14,7 @@ export default class Gateway {
     this.rpc = new Rpc({ baseURL: `${baseURL}/api` })
     this.loginAction = loginAction
     this.completeAction = completeAction
+    this.logoutUrl = logoutUrl
   }
   async getGroup (params) {
     let data = await this.rest.get({ resource: '/group/list', params })
@@ -20,6 +22,10 @@ export default class Gateway {
   }
   async getUserInfo () {
     let data = await this.rest.get({ resource: '/user/info' })
+    return data
+  }
+  async setUser (params) {
+    let data = await this.rest.put({ resource: '/user', params })
     return data
   }
   async getUserField () {

@@ -12,17 +12,21 @@ export function createRouter (baseRouterOption) {
       path: '/login',
       component: r => require.ensure([], () => r(require('~src/views/login.vue')), 'login')
     }, {
-      name: 'complete',
-      path: '/complete',
-      component: r => require.ensure([], () => r(require('~src/views/complete.vue')), 'complete')
+      name: 'sign',
+      path: '/sign',
+      component: r => require.ensure([], () => r(require('~src/views/sign.vue')), 'sign')
     }, {
       name: 'info',
       path: '/info',
       component: r => require.ensure([], () => r(require('~src/views/info.vue')), 'info')
     }, {
-      name: 'sign',
-      path: '/sign',
-      component: r => require.ensure([], () => r(require('~src/views/sign.vue')), 'sign')
+      name: 'complete',
+      path: '/complete',
+      component: r => require.ensure([], () => r(require('~src/views/complete.vue')), 'complete')
+    }, {
+      name: 'missing-params',
+      path: '/missing-params',
+      component: r => require.ensure([], () => r(require('~src/views/missing-params.vue')), 'missing-params')
     }, {
       name: 'reset',
       path: '/reset',
