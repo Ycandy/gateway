@@ -14,7 +14,7 @@
       el-input(
         v-model='basicFields.email.value'
         name='email'
-        disabled)
+        )
     .tips(v-if='basicFields.email.tips')
       span {{ basicFields.email.tips }}
     .first-level
@@ -306,6 +306,7 @@ export default {
 
       if (check) {
         let form = {
+          email: this.basicFields.email.value,
           phone: this.basicFields.phone.value,
           ref_no: this.basicFields.ref_no.value,
           organization: this.cascader.organization.slice().pop(),
@@ -314,7 +315,12 @@ export default {
           room: this.cascader.room.slice().pop()
         }
         await this.$axios.put(`${this.$gatewayServer}/user`, form)
-        window.location.href = document.referrer
+        if (this.$route.query.redirect) {
+          window.location.href = this.$route.query.redirect
+        } else {
+          window.location.href = window.referrer
+        }
+        // window.location.href = `${this.$gatewayServer}/judge-login?genee_oauth=1`
       } else {
         this.$message({
           type: 'error',

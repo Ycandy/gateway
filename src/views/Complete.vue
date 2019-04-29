@@ -27,7 +27,7 @@
       el-input(
         v-model='basicFields.email.value'
         name='email'
-        disabled)
+        )
     .tips(v-if='basicFields.email.tips')
       span {{ basicFields.email.tips }}
     .first-level
