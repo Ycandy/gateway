@@ -166,7 +166,7 @@ export default {
   },
   data () {
     return {
-      completeAction: `${this.gatewayServer}/user/improve-info`,
+      completeAction: `${this.$gatewayServer}/user/improve-info`,
       basicFields: {},
       extendFields: [],
       cascaderProps: {
