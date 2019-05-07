@@ -4,6 +4,7 @@
   .form-board
     .first-level
       span 个人信息
+      el-button(type='primary' style='float: right' @click='logout') 登出
     .second-level
       .input-title 用户名
       .input-title.last {{ info.email }}
@@ -32,35 +33,47 @@
 </template>
 
 <script>
+import { Button } from 'gapper-element-ui'
+
 export default {
-  data () {
-    return {
-      info: {
-        type: ''
-      },
-      status: '',
-      message: {
-        'status_register': '等待审核,  若管理员超过 1 天还未激活您的账号,  请及时联系管理员为您激活账号',
-        'status_register_deny': '很抱歉, 您的审核已被管理员拒绝'
-      }
-    }
+  components: {
+    [Button.name]: Button
   },
-  async mounted () {
-    let loading = this.$loading()
-    let { data } = await this.$axios.get(this.$config.app.info)
+  async asyncData ({ vue, component }) {
+    let loading = vue.$loading()
+    let { data } = await vue.$axios.get(`${vue.$gatewayServer}/user/info`)
     // 返回结果的status有三个值
     // status_register 待审核
     // status_register_deny 被拒绝
     // status_normal 通过
     if (data.status === 'status_normal') {
       // 审核通过则跳转
-      window.location.href = document.referrer
-      // this.$router.push({ name: 'complete', query: { genee_oauth: this.$route.query.genee_oauth } })
+      // window.location.href = document.referrer
+      // vue.$router.push({ name: 'complete', query: { genee_oauth: vue.$route.query.genee_oauth } })
+      window.location.href = `${vue.$gatewayServer}/judge-login?genee_oauth=${vue.$route.query.genee_oauth}`
+      return
     }
-    this.status = data.status
-    this.info = data
-    delete this.info.status
+    let status = data.status
+    let info = data
+    delete info.status
     loading.close()
+    return {
+      status,
+      info
+    }
+  },
+  data () {
+    return {
+      message: {
+        'status_register': '等待审核,  若管理员超过 1 天还未激活您的账号,  请及时联系管理员为您激活账号',
+        'status_register_deny': '很抱歉, 您的审核已被管理员拒绝'
+      }
+    }
+  },
+  methods: {
+    logout () {
+      window.location.href = `${this.$gatewayServer}/logout`
+    }
   }
 }
 </script>

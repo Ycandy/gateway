@@ -1,27 +1,14 @@
 <template lang="pug">
-.info
+.info(v-if='load')
   .page-title
     span 补全用户信息
   .message(ref='message')
-    span 你好!&nbsp;&nbsp;您是首次登录,&nbsp;&nbsp;请首先补全信息
+    span {{ $route.query.message || '' }}
     i.el-icon-close(style='cursor: pointer;margin-left: 20px;' @click='closeMessage')
-  form.form-board(
-    v-if='load'
-    ref='form'
-    method='post'
-    :action='completeAction')
-    .input-group(v-show='false')
-      input(
-        name='redirect'
-        :value='$route.query.redirect')
-      input(
-        name='from'
-        :value='$route.query.from')
-      input(
-        name='genee_oauth'
-        :value='$route.query.genee_oauth')
+  .form-board
     .first-level
       span 账号信息
+      el-button(type='primary' style='float: right' @click='logout') 登出
     .second-level
       .input-title.required 邮箱
       el-input(
@@ -127,29 +114,29 @@
         value-format='yyyy-MM-dd'
         disabled
       )
-    .first-level
-      span 其他信息
-    template(v-for='field in extendFields')
-      .second-level
-        .input-title(:class='{ "required": field.required }') {{ field.name }}
-        el-input(v-if='field.type === 0'
-          v-model='field.value'
-          :name='field.key')
-        template(v-else-if='field.type === 1')
-          el-select(
-            v-model='field.value'
-            :name='field.key')
-            el-option(v-for='option in field.select'
-              :key='option'
-              :label='option'
-              :value='option')
-          input(type='hidden' v-model='field.value' :name='field.key')
-        el-input(v-else-if='field.type === 2'
-          type='number'
-          v-model='field.value'
-          :name='field.key')
-      .tips(v-if='field.tips')
-        span {{ field.tips }}
+    //- .first-level
+    //-   span 其他信息
+    //- template(v-for='field in extendFields')
+    //-   .second-level
+    //-     .input-title(:class='{ "required": field.required }') {{ field.name }}
+    //-     el-input(v-if='field.type === 0'
+    //-       v-model='field.value'
+    //-       :name='field.key')
+    //-     template(v-else-if='field.type === 1')
+    //-       el-select(
+    //-         v-model='field.value'
+    //-         :name='field.key')
+    //-         el-option(v-for='option in field.select'
+    //-           :key='option'
+    //-           :label='option'
+    //-           :value='option')
+    //-       input(type='hidden' v-model='field.value' :name='field.key')
+    //-     el-input(v-else-if='field.type === 2'
+    //-       type='number'
+    //-       v-model='field.value'
+    //-       :name='field.key')
+    //-   .tips(v-if='field.tips')
+    //-     span {{ field.tips }}
     .button-line
       el-button(type='primary' @click='submit' class='submit') 提交
 </template>
@@ -166,7 +153,7 @@ export default {
   },
   data () {
     return {
-      completeAction: `${this.$gatewayServer}/user/improve-info`,
+      completeAction: `${this.gatewayServer}/user/improve-info`,
       basicFields: {},
       extendFields: [],
       cascaderProps: {
@@ -308,7 +295,7 @@ export default {
       this.room = roomResult.data || []
       loading.close()
     },
-    submit () {
+    async submit () {
       let check = true
       Object.values(this.basicFields).forEach(field => {
         if (!this.checkField(field)) check = false
@@ -318,7 +305,22 @@ export default {
       })
 
       if (check) {
-        this.$refs.form.submit()
+        let form = {
+          email: this.basicFields.email.value,
+          phone: this.basicFields.phone.value,
+          ref_no: this.basicFields.ref_no.value,
+          organization: this.cascader.organization.slice().pop(),
+          researchGroup: this.cascader.researchGroup.slice().pop(),
+          building: this.cascader.building.slice().pop(),
+          room: this.cascader.room.slice().pop()
+        }
+        await this.$axios.put(`${this.$gatewayServer}/user`, form)
+        if (this.$route.query.redirect) {
+          window.location.href = this.$route.query.redirect
+        } else {
+          window.location.href = window.referrer
+        }
+        // window.location.href = `${this.$gatewayServer}/judge-login?genee_oauth=1`
       } else {
         this.$message({
           type: 'error',
@@ -346,10 +348,15 @@ export default {
       }
       this.$set(field, 'tips', '')
       return true
+    },
+    logout () {
+      window.location.href = `${this.$gatewayServer}/logout`
     }
   }
 }
 </script>
 
 <style lang="stylus" scoped>
+.info >>> .el-input__prefix
+  padding-left 0
 </style>

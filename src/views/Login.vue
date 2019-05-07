@@ -19,12 +19,15 @@
       //- .qq.type(:class='{ "active": active === "qq" }')
       //-   .icon-png
       //-   span QQ
-    form.form(v-if='active === "account"'
+    form.form(
       :style='{"height" : baseXp * 39 + "px", "width" : baseXp * 80 + "px"}'
       ref='form'
       method='post'
-      :action='$config.app.login')
+      :action='loginAction')
       .input-group(v-show='false')
+        input(
+          name='type'
+          :value='active')
         input(
           name='redirect'
           :value='$route.query.redirect')
@@ -55,11 +58,16 @@
 </template>
 
 <script>
-import { Message } from 'element-ui'
+import { Button, Input } from 'gapper-element-ui'
 
 export default {
+  components: {
+    [Input.name]: Input,
+    [Button.name]: Button
+  },
   data () {
     return {
+      loginAction: `${this.$gatewayServer}/auth`,
       active: 'account',
       form: {
         username: '',
@@ -72,7 +80,7 @@ export default {
     this.baseXp = document.body.clientHeight / 1080 * 10
 
     if (this.$route.query.password_error) {
-      Message({
+      this.$message({
         type: 'error',
         message: '用户名或密码错误'
       })
@@ -87,7 +95,7 @@ export default {
     },
     login () {
       if (!this.form.username || !this.form.password) {
-        Message({
+        this.$message({
           type: 'error',
           message: '请输入用户名或密码'
         })
@@ -194,7 +202,6 @@ export default {
       align-items center
       .input-group
         width 100%
-        // position relative
         .input.el-input
           margin-top 30px
           padding-right 8px
