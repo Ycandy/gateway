@@ -14,6 +14,7 @@
       el-input(
         v-model='basicFields.email.value'
         name='email'
+        :readonly='readonly'
         )
     .tips(v-if='basicFields.email.tips')
       span {{ basicFields.email.tips }}
@@ -179,11 +180,13 @@ export default {
       },
       types: [],
       userTypes: [],
-      load: false
+      load: false,
+      readonly: false
     }
   },
   async mounted () {
     let loading = this.$loading()
+    this.readonly = false
     let result = {}
     let organizationResult = await this.$axios.get(`${this.$gatewayServer}/group/list?type=organization`)
     Reflect.set(result, 'organization', organizationResult)
@@ -218,6 +221,7 @@ export default {
     this.basicFields = basicFields
     this.userTypes = this.basicFields.type.key.split('/')
     this.extendFields = paramsResult.data.extend
+    if (Reflect.has(this.basicFields, 'email') && this.basicFields.email.value) this.readonly = true
     this.load = true
     loading.close()
   },

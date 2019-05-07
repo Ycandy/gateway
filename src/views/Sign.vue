@@ -353,7 +353,7 @@ export default {
             this.$router.push({ name: 'info', query: { genee_oauth: this.$route.query.genee_oauth } })
           })
           .catch(err => {
-            if (err.response.body === 'email already esists') {
+            if (err.response.data.error.message === 'email already esists') {
               this.$message({
                 type: 'error',
                 message: '邮箱已经存在'
