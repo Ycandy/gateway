@@ -270,7 +270,7 @@ export default {
       this.cascader.researchGroup = []
       let organization = value[value.length - 1]
       let researchGroupResult =
-        await this.$axios.get(`${this.$gatewayServer}/group/list?type=researchGroup&id=${organization}`)
+        await this.$axios.get(`${this.$gatewayServer}/group/list?type=lab&id=${organization}`)
       this.researchGroup = researchGroupResult.data || []
       loading.close()
     },
