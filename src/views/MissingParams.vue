@@ -3,9 +3,10 @@
   .page-title
     span 补全用户信息
   .message(ref='message')
-    .info
+    .info-close(style='margin-right: 20px;float:right;line-height:36px')
+      i.el-icon-close(style='cursor: pointer' @click='closeMessage')
+    .info(v-if='$route.query.message')
       span {{ $route.query.message || '' }}
-      i.el-icon-close(style='cursor: pointer;margin-left: 20px;' @click='closeMessage')
     .info(v-for='data in message')
       span {{ data }}
   .form-board
@@ -261,7 +262,7 @@ export default {
         let $message = this.$refs.message
         let height = $message.clientHeight
         if (height > 0) {
-          height -= 1
+          height -= 10
           $message.style.height = height + 'px'
           this.closeMessageAnimate()
         }
