@@ -3,11 +3,12 @@
   .page-title
     span 补全用户信息
   .message(ref='message')
-    .info-close(style='margin-right: 20px;float:right;line-height:36px')
-      i.el-icon-close(style='cursor: pointer' @click='closeMessage')
     .info(v-if='$route.query.message')
       span {{ $route.query.message || '' }}
-    .info(v-for='data in message')
+      i.el-icon-close(style='cursor: pointer;float: right;line-height: 36px;margin-right: 20px;' @click='closeMessage')
+    .info(v-for='(data, index) in message')
+      template(v-if='!$route.query.message && index < 1')
+        i.el-icon-close(style='cursor: pointer;float: right;line-height: 36px;margin-right: 20px;' @click='closeMessage')
       span {{ data }}
   .form-board
     .first-level
