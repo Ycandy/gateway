@@ -76,9 +76,9 @@
     font-size 14px
 .message
   width 50%
-  height 36px
+  // height 36px
   min-width 800px
-  line-height 36px
+  // line-height 36px
   font-size 14px
   color #CC6561
   background #FFF6DB
@@ -86,6 +86,15 @@
   text-align center
   margin 0 auto
   overflow hidden
+  display flex
+  flex-direction column
+  .info
+    height 36px
+    line-height 36px
+    width 100%
+    font-size 14px
+    background transparent
+    text-align center
 .required:after
   content '*'
   color #CC6561

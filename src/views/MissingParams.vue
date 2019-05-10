@@ -3,8 +3,11 @@
   .page-title
     span 补全用户信息
   .message(ref='message')
-    span {{ $route.query.message || '' }}
-    i.el-icon-close(style='cursor: pointer;margin-left: 20px;' @click='closeMessage')
+    .info
+      span {{ $route.query.message || '' }}
+      i.el-icon-close(style='cursor: pointer;margin-left: 20px;' @click='closeMessage')
+    .info(v-for='data in message')
+      span {{ data }}
   .form-board
     .first-level
       span 账号信息
@@ -14,7 +17,7 @@
       el-input(
         v-model='basicFields.email.value'
         name='email'
-        :readonly='readonly'
+        :disabled='readonly'
         )
     .tips(v-if='basicFields.email.tips')
       span {{ basicFields.email.tips }}
@@ -157,6 +160,7 @@ export default {
       completeAction: `${this.gatewayServer}/user/improve-info`,
       basicFields: {},
       extendFields: [],
+      message: [],
       cascaderProps: {
         value: 'id',
         label: 'name',
@@ -221,6 +225,7 @@ export default {
     this.basicFields = basicFields
     this.userTypes = this.basicFields.type.key.split('/')
     this.extendFields = paramsResult.data.extend
+    this.message = paramsResult.data.message
     if (Reflect.has(this.basicFields, 'email') && this.basicFields.email.value) this.readonly = true
     this.load = true
     loading.close()
