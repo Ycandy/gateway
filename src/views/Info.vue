@@ -57,6 +57,18 @@ export default {
     }
     let status = data.status
     let info = data
+    if (info.validStartDate) {
+      let startMonth = info.validStartDate.getMonth() + 1
+      startMonth = startMonth >= 1 && startMonth <= 9 ? '0' + startMonth : startMonth
+      let startDay = info.validStartDate.getDate() >= 1 && info.validStartDate.getDate() <= 9 ? '0' + info.validStartDate.getDate() : info.validStartDate.getDate()
+      info.validStartDate = `${info.validStartDate.getFullYear()}/${startMonth}/${startDay}`
+    }
+    if (info.validEndDate) {
+      let endMonth = info.validEndDate.getMonth() + 1
+      endMonth = endMonth >= 1 && endMonth <= 9 ? '0' + endMonth : endMonth
+      let endDay = info.validEndDate.getDate() >= 1 && info.validEndDate.getDate() <= 9 ? '0' + info.validEndDate.getDate() : info.validEndDate.getDate()
+      info.validEndDate = `${info.validEndDate.getFullYear()}/${endMonth}/${endDay}`
+    }
     delete info.status
     loading.close()
     return {

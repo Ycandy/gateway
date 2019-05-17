@@ -119,6 +119,8 @@
         value-format='yyyy-MM-dd'
         editable
       )
+    .tips(v-if='tips.type')
+      span {{ tips.type }}
     .button-line
       el-button(type='primary' @click='submit') 提交
 </template>
@@ -190,6 +192,15 @@ export default {
         card: ''
       }
     }
+  },
+  mounted () {
+    let currentMonth = new Date().getMonth() + 1
+    let month = currentMonth >= 1 && currentMonth <= 9 ? '0' + currentMonth : currentMonth
+    let day = new Date().getDate() >= 1 && new Date().getDate() <= 9 ? '0' + new Date().getDate() : new Date().getDate()
+    let start = `${new Date().getFullYear()}-${month}-${day}`
+    let end = `${new Date().getFullYear() + 4}-${month}-${day}`
+    this.form.validStartDate = start
+    this.form.validEndDate = end
   },
   methods: {
     parseCascader (building) {
@@ -331,13 +342,7 @@ export default {
         tips.userType = ''
       }
 
-      if (form.validStartDate && !form.validEndDate) {
-        tips.type = '请填写有效结束时间'
-        check = false
-      } else if (!form.validStartDate && form.validEndDate) {
-        tips.type = '请填写有效开始时间'
-        check = false
-      } else if (form.validStartDate && form.validEndDate && form.validStartDate > form.validEndDate) {
+      if (form.validStartDate && form.validEndDate && form.validStartDate > form.validEndDate) {
         tips.type = '有效开始时间不能晚于有效结束时间'
         check = false
       } else {
