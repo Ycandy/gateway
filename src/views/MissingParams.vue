@@ -308,12 +308,12 @@ export default {
     },
     async submit () {
       let check = true
-      Object.values(this.basicFields).forEach(field => {
-        if (!this.checkField(field)) check = false
-      })
-      this.extendFields.forEach(field => {
-        if (!this.checkField(field)) check = false
-      })
+      // Object.values(this.basicFields).forEach(field => {
+      //   if (!this.checkField(field)) check = false
+      // })
+      // this.extendFields.forEach(field => {
+      //   if (!this.checkField(field)) check = false
+      // })
 
       if (check) {
         let form = {
